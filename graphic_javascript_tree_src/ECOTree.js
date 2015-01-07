@@ -2,27 +2,27 @@
 |     ECOTree.js
 |--------------------------------------------------------------------------------------------
 | (c) 2006 Emilio Cortegoso Lobato
-|     
+|
 |     ECOTree is a javascript component for tree drawing. It implements the node positioning
 |     algorithm of John Q. Walker II "Positioning nodes for General Trees".
-|    
+|
 |     Basic features include:
 |       - Layout features: Different node sizes, colors, link types, alignments, separations
 |                          root node positions, etc...
 |       - Nodes can include a title and an hyperlink, and a hidden metadata.
 |       - Subtrees can be collapsed and expanded at will.
 |       - Single and Multiple selection modes.
-|       - Search nodes using title and metadata as well.     
-|     
+|       - Search nodes using title and metadata as well.
+|
 |     This code is free source, but you will be kind if you don't distribute modified versions
 |     with the same name, to avoid version collisions. Otherwise, please hack it!
 |
 |     References:
-|                                                                
+|
 |     Walker II, J. Q., "A Node-Positioning Algorithm for General Trees"
-|	     			   Software — Practice and Experience 10, 1980 553-561.    
-|                      (Obtained from C++ User's journal. Feb. 1991)                                                                              
-|					   
+|	     			   Software ï¿½ Practice and Experience 10, 1980 553-561.
+|                      (Obtained from C++ User's journal. Feb. 1991)
+|
 |     Last updated: October 26th, 2006
 |     Version: 1.0
 \------------------------------------------------------------------------------------------*/
@@ -37,22 +37,22 @@ ECONode = function (id, pid, dsc, w, h, c, bc, target, meta) {
 	this.bc = bc;
 	this.target = target;
 	this.meta = meta;
-	
+
 	this.siblingIndex = 0;
 	this.dbIndex = 0;
-	
+
 	this.XPosition = 0;
 	this.YPosition = 0;
 	this.prelim = 0;
 	this.modifier = 0;
 	this.leftNeighbor = null;
 	this.rightNeighbor = null;
-	this.nodeParent = null;	
+	this.nodeParent = null;
 	this.nodeChildren = [];
-	
+
 	this.isCollapsed = false;
 	this.canCollapse = false;
-	
+
 	this.isSelected = false;
 }
 
@@ -63,7 +63,7 @@ ECONode.prototype._getLevel = function () {
 
 ECONode.prototype._isAncestorCollapsed = function () {
 	if (this.nodeParent.isCollapsed) { return true; }
-	else 
+	else
 	{
 		if (this.nodeParent.id == -1) { return false; }
 		else	{ return this.nodeParent._isAncestorCollapsed(); }
@@ -72,11 +72,11 @@ ECONode.prototype._isAncestorCollapsed = function () {
 
 ECONode.prototype._setAncestorsExpanded = function () {
 	if (this.nodeParent.id == -1) { return; }
-	else 
+	else
 	{
 		this.nodeParent.isCollapsed = false;
-		return this.nodeParent._setAncestorsExpanded(); 
-	}	
+		return this.nodeParent._setAncestorsExpanded();
+	}
 }
 
 ECONode.prototype._getChildrenCount = function () {
@@ -91,14 +91,14 @@ ECONode.prototype._getLeftSibling = function () {
     if(this.leftNeighbor != null && this.leftNeighbor.nodeParent == this.nodeParent)
         return this.leftNeighbor;
     else
-        return null;	
+        return null;
 }
 
 ECONode.prototype._getRightSibling = function () {
     if(this.rightNeighbor != null && this.rightNeighbor.nodeParent == this.nodeParent)
         return this.rightNeighbor;
     else
-        return null;	
+        return null;
 }
 
 ECONode.prototype._getChildAt = function (i) {
@@ -108,7 +108,7 @@ ECONode.prototype._getChildAt = function (i) {
 ECONode.prototype._getChildrenCenter = function (tree) {
     node = this._getFirstChild();
     node1 = this._getLastChild();
-    return node.prelim + ((node1.prelim - node.prelim) + tree._getNodeSize(node1)) / 2;	
+    return node.prelim + ((node1.prelim - node.prelim) + tree._getNodeSize(node1)) / 2;
 }
 
 ECONode.prototype._getFirstChild = function () {
@@ -123,34 +123,34 @@ ECONode.prototype._drawChildrenLinks = function (tree) {
 	var s = [];
 	var xa = 0, ya = 0, xb = 0, yb = 0, xc = 0, yc = 0, xd = 0, yd = 0;
 	var node1 = null;
-	
+
 	switch(tree.config.iRootOrientation)
 	{
 		case ECOTree.RO_TOP:
 			xa = this.XPosition + (this.w / 2);
 			ya = this.YPosition + this.h;
 			break;
-			
+
 		case ECOTree.RO_BOTTOM:
 			xa = this.XPosition + (this.w / 2);
 			ya = this.YPosition;
 			break;
-			
+
 		case ECOTree.RO_RIGHT:
 			xa = this.XPosition;
-			ya = this.YPosition + (this.h / 2);		
+			ya = this.YPosition + (this.h / 2);
 			break;
-			
+
 		case ECOTree.RO_LEFT:
 			xa = this.XPosition + this.w;
-			ya = this.YPosition + (this.h / 2);		
-			break;		
+			ya = this.YPosition + (this.h / 2);
+			break;
 	}
-	
+
 	for (var k = 0; k < this.nodeChildren.length; k++)
 	{
 		node1 = this.nodeChildren[k];
-				
+
 		switch(tree.config.iRootOrientation)
 		{
 			case ECOTree.RO_TOP:
@@ -170,7 +170,7 @@ ECONode.prototype._drawChildrenLinks = function (tree) {
 						break;
 				}
 				break;
-				
+
 			case ECOTree.RO_BOTTOM:
 				xd = xc = node1.XPosition + (node1.w / 2);
 				yd = node1.YPosition + node1.h;
@@ -186,12 +186,12 @@ ECONode.prototype._drawChildrenLinks = function (tree) {
 					case ECOTree.NJ_CENTER:
 						yb = yc = yd + (ya - yd) / 2;
 						break;
-				}				
+				}
 				break;
 
 			case ECOTree.RO_RIGHT:
 				xd = node1.XPosition + node1.w;
-				yd = yc = node1.YPosition + (node1.h / 2);	
+				yd = yc = node1.YPosition + (node1.h / 2);
 				yb = ya;
 				switch (tree.config.iNodeJustification)
 				{
@@ -204,12 +204,12 @@ ECONode.prototype._drawChildrenLinks = function (tree) {
 					case ECOTree.NJ_CENTER:
 						xb = xc = xd + (xa - xd) / 2;
 						break;
-				}								
-				break;		
-				
+				}
+				break;
+
 			case ECOTree.RO_LEFT:
 				xd = node1.XPosition;
-				yd = yc = node1.YPosition + (node1.h / 2);		
+				yd = yc = node1.YPosition + (node1.h / 2);
 				yb = ya;
 				switch (tree.config.iNodeJustification)
 				{
@@ -222,54 +222,54 @@ ECONode.prototype._drawChildrenLinks = function (tree) {
 					case ECOTree.NJ_CENTER:
 						xb = xc = xa + (xd - xa) / 2;
 						break;
-				}								
-				break;				
-		}		
-		
-		
+				}
+				break;
+		}
+
+
 		switch(tree.render)
 		{
 			case "CANVAS":
 				tree.ctx.save();
 				tree.ctx.strokeStyle = tree.config.linkColor;
-				tree.ctx.beginPath();			
+				tree.ctx.beginPath();
 				switch (tree.config.linkType)
 				{
-					case "M":						
+					case "M":
 						tree.ctx.moveTo(xa,ya);
 						tree.ctx.lineTo(xb,yb);
 						tree.ctx.lineTo(xc,yc);
-						tree.ctx.lineTo(xd,yd);						
+						tree.ctx.lineTo(xd,yd);
 						break;
-						
+
 					case "B":
 						tree.ctx.moveTo(xa,ya);
-						tree.ctx.bezierCurveTo(xb,yb,xc,yc,xd,yd);	
-						break;					
+						tree.ctx.bezierCurveTo(xb,yb,xc,yc,xd,yd);
+						break;
 				}
 				tree.ctx.stroke();
 				tree.ctx.restore();
 				break;
-											
+
 			case "VML":
 				switch (tree.config.linkType)
 				{
 					case "M":
 						s.push('<v:polyline points="');
-						s.push(xa + ' ' + ya + ' ' + xb + ' ' + yb + ' ' + xc + ' ' + yc + ' ' + xd + ' ' + yd); 		
-						s.push('" strokecolor="'+tree.config.linkColor+'"><v:fill on="false" /></v:polyline>');					
+						s.push(xa + ' ' + ya + ' ' + xb + ' ' + yb + ' ' + xc + ' ' + yc + ' ' + xd + ' ' + yd);
+						s.push('" strokecolor="'+tree.config.linkColor+'"><v:fill on="false" /></v:polyline>');
 						break;
 					case "B":
 						s.push('<v:curve from="');
-						s.push(xa + ' ' + ya + '" control1="' + xb + ' ' + yb + '" control2="' + xc + ' ' + yc + '" to="' + xd + ' ' + yd); 		
-						s.push('" strokecolor="'+tree.config.linkColor+'"><v:fill on="false" /></v:curve>');					
-						break;					
+						s.push(xa + ' ' + ya + '" control1="' + xb + ' ' + yb + '" control2="' + xc + ' ' + yc + '" to="' + xd + ' ' + yd);
+						s.push('" strokecolor="'+tree.config.linkColor+'"><v:fill on="false" /></v:curve>');
+						break;
 				}
 				break;
-				
-		}			
-	}	
-	
+
+		}
+	}
+
 	return s.join('');
 }
 
@@ -282,7 +282,7 @@ ECOTree = function (obj, elm) {
 		iRootOrientation : ECOTree.RO_TOP,
 		iNodeJustification : ECOTree.NJ_TOP,
 		topXAdjustment : 0,
-		topYAdjustment : 0,		
+		topYAdjustment : 0,
 		render : "AUTO",
 		linkType : "M",
 		linkColor : "blue",
@@ -303,7 +303,7 @@ ECOTree = function (obj, elm) {
 		collapsedImage : './img/plus.gif',
 		transImage : './img/trans.gif'
 	}
-	
+
 	this.version = "1.1";
 	this.obj = obj;
 	this.elm = document.getElementById(elm);
@@ -312,21 +312,21 @@ ECOTree = function (obj, elm) {
 	this.ctx = null;
 	this.canvasoffsetTop = 0;
 	this.canvasoffsetLeft = 0;
-	
+
 	this.maxLevelHeight = [];
 	this.maxLevelWidth = [];
 	this.previousLevelNode = [];
-	
+
 	this.rootYOffset = 0;
 	this.rootXOffset = 0;
-	
+
 	this.nDatabaseNodes = [];
 	this.mapIDs = {};
-	
+
 	this.root = new ECONode(-1, null, null, 2, 2);
 	this.iSelectedNode = -1;
 	this.iLastSearch = 0;
-	
+
 }
 
 //Constant values
@@ -336,6 +336,7 @@ ECOTree.RO_TOP = 0;
 ECOTree.RO_BOTTOM = 1;
 ECOTree.RO_RIGHT = 2;
 ECOTree.RO_LEFT = 3;
+ECOTree.RO_CERCLE = 4;
 
 //Level node alignment
 ECOTree.NJ_TOP = 0;
@@ -364,7 +365,7 @@ ECOTree.SL_NONE = 2;
 ECOTree._getAutoRenderMode = function() {
 	var r = "VML";
 	var is_ie6 = /msie 6\.0/i.test(navigator.userAgent);
-	var is_ff = /Firefox/i.test(navigator.userAgent);	
+	var is_ff = /Firefox/i.test(navigator.userAgent);
 	if (is_ff) r = "CANVAS";
 	return r;
 }
@@ -393,7 +394,7 @@ ECOTree._canvasNodeClickHandler = function (tree,target,nodeid) {
 //Layout algorithm
 ECOTree._firstWalk = function (tree, node, level) {
 		var leftSibling = null;
-		
+
         node.XPosition = 0;
         node.YPosition = 0;
         node.prelim = 0;
@@ -410,7 +411,7 @@ ECOTree._firstWalk = function (tree, node, level) {
                 node.prelim = leftSibling.prelim + tree._getNodeSize(leftSibling) + tree.config.iSiblingSeparation;
             else
                 node.prelim = 0;
-        } 
+        }
         else
         {
             var n = node._getChildrenCount();
@@ -428,12 +429,12 @@ ECOTree._firstWalk = function (tree, node, level) {
                 node.prelim = leftSibling.prelim + tree._getNodeSize(leftSibling) + tree.config.iSiblingSeparation;
                 node.modifier = node.prelim - midPoint;
                 ECOTree._apportion(tree, node, level);
-            } 
+            }
             else
-            {            	
+            {
                 node.prelim = midPoint;
             }
-        }	
+        }
 }
 
 ECOTree._apportion = function (tree, node, level) {
@@ -493,17 +494,17 @@ ECOTree._secondWalk = function (tree, node, level, X, Y) {
             var maxsizeTmp = 0;
             var nodesizeTmp = 0;
             var flag = false;
-            
+
             switch(tree.config.iRootOrientation)
-            {            
+            {
 	            case ECOTree.RO_TOP:
-	            case ECOTree.RO_BOTTOM:	        	            	    	
+	            case ECOTree.RO_BOTTOM:
 	                maxsizeTmp = tree.maxLevelHeight[level];
-	                nodesizeTmp = node.h;	                
+	                nodesizeTmp = node.h;
 	                break;
 
 	            case ECOTree.RO_RIGHT:
-	            case ECOTree.RO_LEFT:            
+	            case ECOTree.RO_LEFT:
 	                maxsizeTmp = tree.maxLevelWidth[level];
 	                flag = true;
 	                nodesizeTmp = node.w;
@@ -515,12 +516,12 @@ ECOTree._secondWalk = function (tree, node, level, X, Y) {
 	                node.XPosition = xTmp;
 	                node.YPosition = yTmp;
 	                break;
-	
+
 	            case ECOTree.NJ_CENTER:
 	                node.XPosition = xTmp;
 	                node.YPosition = yTmp + (maxsizeTmp - nodesizeTmp) / 2;
 	                break;
-	
+
 	            case ECOTree.NJ_BOTTOM:
 	                node.XPosition = xTmp;
 	                node.YPosition = (yTmp + maxsizeTmp) - nodesizeTmp;
@@ -537,7 +538,7 @@ ECOTree._secondWalk = function (tree, node, level, X, Y) {
 	            case ECOTree.RO_BOTTOM:
 	                node.YPosition = -node.YPosition - nodesizeTmp;
 	                break;
-	
+
 	            case ECOTree.RO_RIGHT:
 	                node.XPosition = -node.XPosition - nodesizeTmp;
 	                break;
@@ -547,62 +548,62 @@ ECOTree._secondWalk = function (tree, node, level, X, Y) {
             var rightSibling = node._getRightSibling();
             if(rightSibling != null)
                 ECOTree._secondWalk(tree, rightSibling, level, X, Y);
-        }	
+        }
 }
 
-ECOTree.prototype._positionTree = function () {	
+ECOTree.prototype._positionTree = function () {
 	this.maxLevelHeight = [];
-	this.maxLevelWidth = [];			
-	this.previousLevelNode = [];		
+	this.maxLevelWidth = [];
+	this.previousLevelNode = [];
 	ECOTree._firstWalk(this.self, this.root, 0);
-	
+
 	switch(this.config.iRootOrientation)
-	{            
+	{
 	    case ECOTree.RO_TOP:
-	    case ECOTree.RO_LEFT: 
+	    case ECOTree.RO_LEFT:
 	    		this.rootXOffset = this.config.topXAdjustment + this.root.XPosition;
 	    		this.rootYOffset = this.config.topYAdjustment + this.root.YPosition;
-	        break;    
-	        
-	    case ECOTree.RO_BOTTOM:	
-	    case ECOTree.RO_RIGHT:             
+	        break;
+
+	    case ECOTree.RO_BOTTOM:
+	    case ECOTree.RO_RIGHT:
 	    		this.rootXOffset = this.config.topXAdjustment + this.root.XPosition;
 	    		this.rootYOffset = this.config.topYAdjustment + this.root.YPosition;
-	}	
-	
-	ECOTree._secondWalk(this.self, this.root, 0, 0, 0);	
+	}
+
+	ECOTree._secondWalk(this.self, this.root, 0, 0, 0);
 }
 
-ECOTree.prototype._setLevelHeight = function (node, level) {	
-	if (this.maxLevelHeight[level] == null) 
+ECOTree.prototype._setLevelHeight = function (node, level) {
+	if (this.maxLevelHeight[level] == null)
 		this.maxLevelHeight[level] = 0;
     if(this.maxLevelHeight[level] < node.h)
-        this.maxLevelHeight[level] = node.h;	
+        this.maxLevelHeight[level] = node.h;
 }
 
 ECOTree.prototype._setLevelWidth = function (node, level) {
-	if (this.maxLevelWidth[level] == null) 
+	if (this.maxLevelWidth[level] == null)
 		this.maxLevelWidth[level] = 0;
     if(this.maxLevelWidth[level] < node.w)
-        this.maxLevelWidth[level] = node.w;		
+        this.maxLevelWidth[level] = node.w;
 }
 
 ECOTree.prototype._setNeighbors = function(node, level) {
     node.leftNeighbor = this.previousLevelNode[level];
     if(node.leftNeighbor != null)
         node.leftNeighbor.rightNeighbor = node;
-    this.previousLevelNode[level] = node;	
+    this.previousLevelNode[level] = node;
 }
 
 ECOTree.prototype._getNodeSize = function (node) {
     switch(this.config.iRootOrientation)
     {
-    case ECOTree.RO_TOP: 
-    case ECOTree.RO_BOTTOM: 
+    case ECOTree.RO_TOP:
+    case ECOTree.RO_BOTTOM:
         return node.w;
 
-    case ECOTree.RO_RIGHT: 
-    case ECOTree.RO_LEFT: 
+    case ECOTree.RO_RIGHT:
+    case ECOTree.RO_LEFT:
         return node.h;
     }
     return 0;
@@ -611,7 +612,7 @@ ECOTree.prototype._getNodeSize = function (node) {
 ECOTree.prototype._getLeftmost = function (node, level, maxlevel) {
     if(level >= maxlevel) return node;
     if(node._getChildrenCount() == 0) return null;
-    
+
     var n = node._getChildrenCount();
     for(var i = 0; i < n; i++)
     {
@@ -621,7 +622,7 @@ ECOTree.prototype._getLeftmost = function (node, level, maxlevel) {
             return leftmostDescendant;
     }
 
-    return null;	
+    return null;
 }
 
 ECOTree.prototype._selectNodeInt = function (dbindex, flagToggle) {
@@ -630,29 +631,29 @@ ECOTree.prototype._selectNodeInt = function (dbindex, flagToggle) {
 		if ((this.iSelectedNode != dbindex) && (this.iSelectedNode != -1))
 		{
 			this.nDatabaseNodes[this.iSelectedNode].isSelected = false;
-		}		
+		}
 		this.iSelectedNode = (this.nDatabaseNodes[dbindex].isSelected && flagToggle) ? -1 : dbindex;
-	}	
-	this.nDatabaseNodes[dbindex].isSelected = (flagToggle) ? !this.nDatabaseNodes[dbindex].isSelected : true;	
+	}
+	this.nDatabaseNodes[dbindex].isSelected = (flagToggle) ? !this.nDatabaseNodes[dbindex].isSelected : true;
 }
 
 ECOTree.prototype._collapseAllInt = function (flag) {
 	var node = null;
 	for (var n = 0; n < this.nDatabaseNodes.length; n++)
-	{ 
+	{
 		node = this.nDatabaseNodes[n];
 		if (node.canCollapse) node.isCollapsed = flag;
-	}	
+	}
 	this.UpdateTree();
 }
 
 ECOTree.prototype._selectAllInt = function (flag) {
 	var node = null;
 	for (var k = 0; k < this.nDatabaseNodes.length; k++)
-	{ 
+	{
 		node = this.nDatabaseNodes[k];
 		node.isSelected = flag;
-	}	
+	}
 	this.iSelectedNode = -1;
 	this.UpdateTree();
 }
@@ -662,11 +663,11 @@ ECOTree.prototype._drawTree = function () {
 	var node = null;
 	var color = "";
 	var border = "";
-			
+
 	for (var n = 0; n < this.nDatabaseNodes.length; n++)
-	{ 
+	{
 		node = this.nDatabaseNodes[n];
-		
+
 		switch (this.config.colorStyle) {
 			case ECOTree.CS_NODE:
 				color = node.c;
@@ -679,7 +680,7 @@ ECOTree.prototype._drawTree = function () {
 				border = this.config.levelBorderColors[iColor];
 				break;
 		}
-		
+
 		if (!node._isAncestorCollapsed())
 		{
 			switch (this.render)
@@ -689,119 +690,119 @@ ECOTree.prototype._drawTree = function () {
 					this.ctx.save();
 					this.ctx.strokeStyle = border;
 					switch (this.config.nodeFill) {
-						case ECOTree.NF_GRADIENT:							
+						case ECOTree.NF_GRADIENT:
 							var lgradient = this.ctx.createLinearGradient(node.XPosition,0,node.XPosition+node.w,0);
 							lgradient.addColorStop(0.0,((node.isSelected)?this.config.nodeSelColor:color));
 							lgradient.addColorStop(1.0,"#F5FFF5");
 							this.ctx.fillStyle = lgradient;
 							break;
-							
+
 						case ECOTree.NF_FLAT:
 							this.ctx.fillStyle = ((node.isSelected)?this.config.nodeSelColor:color);
 							break;
-					}					
-					
+					}
+
 					ECOTree._roundedRect(this.ctx,node.XPosition,node.YPosition,node.w,node.h,5);
 					this.ctx.restore();
-					
+
 					//HTML part...
 					s.push('<div id="' + node.id + '" class="econode" style="{top:'+(node.YPosition+this.canvasoffsetTop)+'; left:'+(node.XPosition+this.canvasoffsetLeft)+'; width:'+node.w+'; height:'+node.h+';}" ');
-					if (this.config.selectMode != ECOTree.SL_NONE)											
-						s.push('onclick="javascript:ECOTree._canvasNodeClickHandler('+this.obj+',event.target.id,\''+node.id+'\');" ');										
+					if (this.config.selectMode != ECOTree.SL_NONE)
+						s.push('onclick="javascript:ECOTree._canvasNodeClickHandler('+this.obj+',event.target.id,\''+node.id+'\');" ');
 					s.push('>');
-					s.push('<font face=Verdana size=1>');					
+					s.push('<font face=Verdana size=1>');
 					if (node.canCollapse) {
 						s.push('<a id="c' + node.id + '" href="javascript:'+this.obj+'.collapseNode(\''+node.id+'\', true);" >');
-						s.push('<img border=0 src="'+((node.isCollapsed) ? this.config.collapsedImage : this.config.expandedImage)+'" >');							
+						s.push('<img border=0 src="'+((node.isCollapsed) ? this.config.collapsedImage : this.config.expandedImage)+'" >');
 						s.push('</a>');
-						s.push('<img src="'+this.config.transImage+'" >');						
-					}					
+						s.push('<img src="'+this.config.transImage+'" >');
+					}
 					if (node.target && this.config.useTarget)
 					{
 						s.push('<a id="t' + node.id + '" href="'+node.target+'">');
 						s.push(node.dsc);
 						s.push('</a>');
-					}				
+					}
 					else
-					{						
+					{
 						s.push(node.dsc);
 					}
 					s.push('</font>');
-					s.push('</div>');		
+					s.push('</div>');
 					break;
-					
+
 				case "VML":
 					s.push('<v:roundrect id="' + node.id + '" strokecolor="'+border+'" arcsize="0.18"	');
 					s.push('style="position:absolute; top:'+node.YPosition+'; left:'+node.XPosition+'; width:'+node.w+'; height:'+node.h+'" ');
 					if (this.config.selectMode != ECOTree.SL_NONE)
-						s.push('href="javascript:'+this.obj+'.selectNode(\''+node.id+'\', true);" ');										
+						s.push('href="javascript:'+this.obj+'.selectNode(\''+node.id+'\', true);" ');
 					s.push('>');
 					s.push('<v:textbox inset="0.5px,0.5px,0.5px,0.5px" ><font face=Verdana size=1>');
 					if (node.canCollapse) {
 						s.push('<a href="javascript:'+this.obj+'.collapseNode(\''+node.id+'\', true);" >');
-						s.push('<img border=0 src="'+((node.isCollapsed) ? this.config.collapsedImage : this.config.expandedImage)+'" >');							
+						s.push('<img border=0 src="'+((node.isCollapsed) ? this.config.collapsedImage : this.config.expandedImage)+'" >');
 						s.push('</a>');
-						s.push('<img src="'+this.config.transImage+'" >');						
-					}					
+						s.push('<img src="'+this.config.transImage+'" >');
+					}
 					if (node.target && this.config.useTarget)
 					{
 						s.push('<a href="'+node.target+'">');
-						s.push(node.dsc);			
-						s.push('</a>');	
-					}				
-					else
-					{						
-						s.push(node.dsc);									
+						s.push(node.dsc);
+						s.push('</a>');
 					}
-					s.push('</font></v:textbox>');											
+					else
+					{
+						s.push(node.dsc);
+					}
+					s.push('</font></v:textbox>');
 					switch (this.config.nodeFill) {
 						case ECOTree.NF_GRADIENT:
-							s.push('<v:fill type=gradient color2="'+((node.isSelected)?this.config.nodeSelColor:color)+'" color="#F5FFF5" angle=90 />');	
+							s.push('<v:fill type=gradient color2="'+((node.isSelected)?this.config.nodeSelColor:color)+'" color="#F5FFF5" angle=90 />');
 							break;
 						case ECOTree.NF_FLAT:
-							s.push('<v:fill type="solid" color="'+((node.isSelected)?this.config.nodeSelColor:color)+'" />');	
+							s.push('<v:fill type="solid" color="'+((node.isSelected)?this.config.nodeSelColor:color)+'" />');
 							break;
 					}
-					s.push('<v:shadow type="single" on="true" opacity="0.7" />');					
-					s.push('</v:roundrect>');																									
+					s.push('<v:shadow type="single" on="true" opacity="0.7" />');
+					s.push('</v:roundrect>');
 					break;
-			}	
+			}
 			if (!node.isCollapsed)	s.push(node._drawChildrenLinks(this.self));
 		}
-	}	
-	return s.join('');	
+	}
+	return s.join('');
 }
 
-ECOTree.prototype.toString = function () {	
+ECOTree.prototype.toString = function () {
 	var s = [];
-	
+
 	this._positionTree();
-	
+
 	switch (this.render)
 	{
 		case "CANVAS":
 			s.push('<canvas id="ECOTreecanvas" width=2000 height=2000></canvas>');
 			break;
-			
+
 		case "HTML":
 			s.push('<div class="maindiv">');
 			s.push(this._drawTree());
 			s.push('</div>');
 			break;
-			
+
 		case "VML":
 			s.push('<v:group coordsize="10000, 10000" coordorigin="0, 0" style="position:absolute;width=10000px;height=10000px;" >');
 			s.push(this._drawTree());
 			s.push('</v:group>');
 			break;
 	}
-	
+
 	return s.join('');
 }
 
 // ECOTree API begins here...
 
-ECOTree.prototype.UpdateTree = function () {	
+ECOTree.prototype.UpdateTree = function () {
 	this.elm.innerHTML = this;
 	if (this.render == "CANVAS") {
 		var canvas = document.getElementById("ECOTreecanvas");
@@ -809,10 +810,10 @@ ECOTree.prototype.UpdateTree = function () {
 			this.canvasoffsetLeft = canvas.offsetLeft;
 			this.canvasoffsetTop = canvas.offsetTop;
 			this.ctx = canvas.getContext('2d');
-			var h = this._drawTree();	
+			var h = this._drawTree();
 			var r = this.elm.ownerDocument.createRange();
 			r.setStartBefore(this.elm);
-			var parsedHTML = r.createContextualFragment(h);								
+			var parsedHTML = r.createContextualFragment(h);
 			//this.elm.parentNode.insertBefore(parsedHTML,this.elm)
 			//this.elm.parentNode.appendChild(parsedHTML);
 			this.elm.appendChild(parsedHTML);
@@ -821,16 +822,16 @@ ECOTree.prototype.UpdateTree = function () {
 	}
 }
 
-ECOTree.prototype.add = function (id, pid, dsc, w, h, c, bc, target, meta) {	
+ECOTree.prototype.add = function (id, pid, dsc, w, h, c, bc, target, meta) {
 	var nw = w || this.config.defaultNodeWidth; //Width, height, colors, target and metadata defaults...
 	var nh = h || this.config.defaultNodeHeight;
 	var color = c || this.config.nodeColor;
 	var border = bc || this.config.nodeBorderColor;
 	var tg = (this.config.useTarget) ? ((typeof target == "undefined") ? (this.config.defaultTarget) : target) : null;
 	var metadata = (typeof meta != "undefined")	? meta : "";
-	
+
 	var pnode = null; //Search for parent node in database
-	if (pid == -1) 
+	if (pid == -1)
 		{
 			pnode = this.root;
 		}
@@ -843,15 +844,15 @@ ECOTree.prototype.add = function (id, pid, dsc, w, h, c, bc, target, meta) {
 					pnode = this.nDatabaseNodes[k];
 					break;
 				}
-			}	
+			}
 		}
-	
+
 	var node = new ECONode(id, pid, dsc, nw, nh, color, border, tg, metadata);	//New node creation...
 	node.nodeParent = pnode;  //Set it's parent
-	pnode.canCollapse = true; //It's obvious that now the parent can collapse	
+	pnode.canCollapse = true; //It's obvious that now the parent can collapse
 	var i = this.nDatabaseNodes.length;	//Save it in database
-	node.dbIndex = this.mapIDs[id] = i;	 
-	this.nDatabaseNodes[i] = node;	
+	node.dbIndex = this.mapIDs[id] = i;
+	this.nDatabaseNodes[i] = node;
 	var h = pnode.nodeChildren.length; //Add it as child of it's parent
 	node.siblingIndex = h;
 	pnode.nodeChildren[h] = node;
@@ -860,25 +861,25 @@ ECOTree.prototype.add = function (id, pid, dsc, w, h, c, bc, target, meta) {
 ECOTree.prototype.searchNodes = function (str) {
 	var node = null;
 	var m = this.config.searchMode;
-	var sm = (this.config.selectMode == ECOTree.SL_SINGLE);	 
-	
+	var sm = (this.config.selectMode == ECOTree.SL_SINGLE);
+
 	if (typeof str == "undefined") return;
 	if (str == "") return;
-	
+
 	var found = false;
 	var n = (sm) ? this.iLastSearch : 0;
 	if (n == this.nDatabaseNodes.length) n = this.iLastSeach = 0;
-	
+
 	str = str.toLocaleUpperCase();
-	
+
 	for (; n < this.nDatabaseNodes.length; n++)
-	{ 		
-		node = this.nDatabaseNodes[n];				
+	{
+		node = this.nDatabaseNodes[n];
 		if (node.dsc.toLocaleUpperCase().indexOf(str) != -1 && ((m == ECOTree.SM_DSC) || (m == ECOTree.SM_BOTH))) { node._setAncestorsExpanded(); this._selectNodeInt(node.dbIndex, false); found = true; }
 		if (node.meta.toLocaleUpperCase().indexOf(str) != -1 && ((m == ECOTree.SM_META) || (m == ECOTree.SM_BOTH))) { node._setAncestorsExpanded(); this._selectNodeInt(node.dbIndex, false); found = true; }
 		if (sm && found) {this.iLastSearch = n + 1; break;}
-	}	
-	this.UpdateTree();	
+	}
+	this.UpdateTree();
 }
 
 ECOTree.prototype.selectAll = function () {
@@ -904,7 +905,7 @@ ECOTree.prototype.collapseNode = function (nodeid, upd) {
 	if (upd) this.UpdateTree();
 }
 
-ECOTree.prototype.selectNode = function (nodeid, upd) {		
+ECOTree.prototype.selectNode = function (nodeid, upd) {
 	this._selectNodeInt(this.mapIDs[nodeid], true);
 	if (upd) this.UpdateTree();
 }
@@ -924,25 +925,25 @@ ECOTree.prototype.setNodeMetadata = function (nodeid, meta, upd) {
 ECOTree.prototype.setNodeTarget = function (nodeid, target, upd) {
 	var dbindex = this.mapIDs[nodeid];
 	this.nDatabaseNodes[dbindex].target = target;
-	if (upd) this.UpdateTree();	
+	if (upd) this.UpdateTree();
 }
 
 ECOTree.prototype.setNodeColors = function (nodeid, color, border, upd) {
 	var dbindex = this.mapIDs[nodeid];
 	if (color) this.nDatabaseNodes[dbindex].c = color;
 	if (border) this.nDatabaseNodes[dbindex].bc = border;
-	if (upd) this.UpdateTree();	
+	if (upd) this.UpdateTree();
 }
 
 ECOTree.prototype.getSelectedNodes = function () {
 	var node = null;
 	var selection = [];
-	var selnode = null;	
-	
+	var selnode = null;
+
 	for (var n=0; n<this.nDatabaseNodes.length; n++) {
 		node = this.nDatabaseNodes[n];
 		if (node.isSelected)
-		{			
+		{
 			selnode = {
 				"id" : node.id,
 				"dsc" : node.dsc,
