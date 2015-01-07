@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+</head>
+
+
+<body>
+
+<script type="text/javascript" src="JQuery.js"></script>
+<script>
+
+//Creation d un tableau d elements
+var elements = [];
+//top correspond à y et left à x
+
+//insertion d'elements
+elements.push({id:"A",id_father:"", top: 5, left: 8, title:"test1"})
+elements.push({id:"B",id_father:"A",top: 10, left: 10, title:"test2"})
+elements.push({id:"C",id_father:"A",top: 15, left: 18, title:"test3"})
+elements.push({id:"D",id_father:"C",top: 30, left: 20, title:"test3"})
+elements.push({id:"E",id_father:"C",top: 30, left: 10, title:"test3"})
+
+//test
+//test=elements.length -3
+//alert(elements[test].top);
+
+//existence de parents
+function HasFather(index){
+	if (elements[index].id_father != ""){
+		return true
+		};
+};
+
+function ElementExist(index){
+	if (elements[index].id != ""){
+	return true
+	};
+
+}
+
+function IsFrereExclu(brothers){
+	for (indexBro = elements.length -1, indexBro > 0; indexBro--;){
+	if element[index].id = frereexclu[indexBro2].id
+
+	return true
+	};
+}
+		
+//existence de freres
+function HasBrothers(index){
+
+	//cree un tableau ou sont stockes les freres
+	var brothers = [];
+	for ( indexBro = elements.length -1, indexBro > 0; indexBro--;){
+
+		//si des freres existent ils sont inserès dans le tableau
+		if (elements[indexBro].id_father == elements[index].id_father){
+			brothers.push({id:elements[indexBro].id,id_father:elements[indexBro].id_father,top: elements[indexBro].top, left: elements[indexBro].left, title:elements[indexBro].title})
+			return true
+		};
+	};
+};
+
+
+//fonction d'alignement Vertical
+function AlignV(elements){
+
+	//declarationation de LA variable qui parcourt la liste
+	var index = elements.length -1
+
+	//parcours la liste, seulement les fils, seulement les cases du tableau qui existent, ne se réapplique pas aux freres de l'element cible
+	for (HasFather() == true ; ElementExist() == true ;index > 0; index--; index){
+
+		//vérifie la présence de freres
+		if (HasBrothers() == false){
+			elements[index].top = elements[id_father].top
+			elements[index].left = elements[id_father].left + 10
+		}
+
+		else{ 
+
+			//instancie un tableau d'exclusions
+			var frereexclu = [];
+
+			//vérifie si le nombre de frères est PAIR ou IMPAIR
+			if ((brothers.length%2) == 0; ){
+				//parcours de la liste Brothers et modif top alternativement
+				for( indexBro2 = brothers.length -1, indexBro2 > 0; altern=5){
+
+				elements[index].left = elements[indexBro2].left +10
+				elements[index].top = elements[indexBro2].top +altern
+				indexBro2--
+				altern= -altern
+
+				//met le frere en exclusion
+				frereexclu.push({id:elements[indexBro2].id,id_father:elements[indexBro2].id_father,top: elements[indexBro2].top, left: elements[indexBro2].left, title:elements[indexBro2].title})
+				
+				};
+			}
+
+			else{
+
+				//gestion du premier fils impair
+				elements[index].top = elements[brothers.length -1].left +10
+				elements[index].top = elements[brothers.length -1].top
+
+				//gestion des suivants
+				for ( indexBro2 = brothers.length -2, indexBro2 > 0; indexBro--;){
+
+				elements[index].top = elements[indexBro2].left +10
+				elements[index].top = elements[indexBro2].top +10
+				}
+			}
+		}
+	};	
+
+
+};
+
+return elements;
+};
+
+
+
+function lire(){ for(i=0; i<elements.length; i++){
+alert(elements[i].id)};
+};
+lire();
+
+
+//AlignV();
+
+
+</script>
+
+</body>
+</html>
