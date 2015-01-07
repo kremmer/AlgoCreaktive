@@ -5,12 +5,15 @@ var elements = [];
 elements.push({id : "A",id_father : "" , top: 5, left: 6})
 elements.push({id : "B",id_father : "A", top: 15, left: 10})
 elements.push({id : "C",id_father : "A", top: 9, left: 12})
-elements.push({id : "D",id_father : "B", top: 20, left: 8})
+elements.push({id : "D",id_father : "B", top: 50, left: 8})
 var ElementIdF = [];
 var Result = [];
 var TabChild = [];
 var Father = [];
 var level = 0;
+var espaceTop = 10;
+var espaceLeft = 10;
+var center = 20;
 var api ={
 
   GetNbrElements : function()
@@ -58,48 +61,48 @@ var api ={
    for ( i in elements)
    {
      if ( elements[i].id_father == Father[0] ){
-       level = 1;
+
        TabChild.push(elements[i])
      }
    }
    return TabChild;
  }
 ,
- GetTabIdF : function (){
-
-   for ( var i = 0; i < elements.length ; i++)
-   {
-     for ( i in elements)// Ajoute les Id_father dans un autre tableau si ils sont != de ""
-     {
-       if (elements[i].id_father != "")
-       {
-         ElementIdF.push(elements[i].id_father);
-       }
-     }
-   }
- },
-
- GetLastChildrenTree : function (){
-   for ( var i = 0; i < elements.length ; i++)
-   {
-     var k = 0;
-     for ( var j = 0; j <= elements.length & k == 0 ; j++)
-     {
-       if ( elements[i].id == ElementIdF[j])
-       {
-         k = 1;
-       }
-       if ( j == elements.length )
-       {
-         Result.push(elements[i].id);
-       }
-     }
-   }
- }
-,
+//  GetTabIdF : function (){
+//
+//    for ( var i = 0; i < elements.length ; i++)
+//    {
+//      for ( i in elements)// Ajoute les Id_father dans un autre tableau si ils sont != de ""
+//      {
+//        if (elements[i].id_father != "")
+//        {
+//          ElementIdF.push(elements[i].id_father);
+//        }
+//      }
+//    }
+//  },
+//
+//  GetLastChildrenTree : function (){
+//    for ( var i = 0; i < elements.length ; i++)
+//    {
+//      var k = 0;
+//      for ( var j = 0; j <= elements.length & k == 0 ; j++)
+//      {
+//        if ( elements[i].id == ElementIdF[j])
+//        {
+//          k = 1;
+//        }
+//        if ( j == elements.length )
+//        {
+//          Result.push(elements[i].id);
+//        }
+//      }
+//    }
+//  }
+// ,
   alignH : function(elements){
 
-var center = 20;
+
 // api.GetTabIdF();
 // api.GetLastChildrenTree();
 api.GetSibling();
@@ -118,12 +121,27 @@ for ( j in TabChild ){
       }
       if (elements[i].id == TabChild[j].id)
       {
-        elements[i].top = center;
-        elements[i].left = 40;
+        for ( var k = 0; k < TabChild.length ; k++)
+        {
+          if ( k > 0)
+          {
+            TabChild[k].left = TabChild[0].left + espaceLeft;
+          }
+
+
+        }
+        elements[i].top = center + espaceTop;
+        elements[i].left = TabChild[j].left;
       }
+
+
+
 }
+
 }
+
 }
+
     return elements;
 
   }
@@ -150,8 +168,9 @@ alignV : function (elements){
         }
         if (elements[i].id == TabChild[j].id)
         {
-          elements[i].top = 40;
+          elements[i].top = 40 ;
           elements[i].left = center;
+
         }
       }
     }
