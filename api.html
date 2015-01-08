@@ -3,16 +3,20 @@
 
 var elements = [];
 elements.push({id : "A",id_father : "" , top: 5, left: 10, longueur: 10, largueur: 10})
-elements.push({id : "B",id_father : "A", top: 15, left: 30,longueur: 20, largueur: 20})
+elements.push({id : "B",id_father : "A", top: 15, left: 30,longueur: 15, largueur: 20})
 elements.push({id : "C",id_father : "A", top: 9, left: 12, longueur: 15, largueur: 5})
 elements.push({id : "D",id_father : "A", top: 50, left: 8, longueur: 8, largueur: 25})
 elements.push({id : "E",id_father : "C", top: 50, left: 8, longueur: 5, largueur: 10})
 
 var TabChild = [];
 var Father = [];
+
 var espaceTop = 10;
 var espaceLeft = 10;
+
+var espaceTopFi = 0;
 var espaceLeftFi=0;
+
 var nbrchild=0;
 var DeltaX =0;
 var api ={
@@ -76,6 +80,21 @@ var api ={
    return TabChild;
  }
 ,
+GetEspaceTop : function(element)
+{
+  var Etop = 0;
+  for ( var l = 0; l < element.length ; l++)
+  {
+    if ( element[l].longueur > Etop)
+    {
+      Etop = element[l].longueur;
+    }
+
+  }
+
+  espaceTopFi = espaceTop + Etop;
+
+},
 GetEspaceLeft : function(element)
 {
   var Eleft = 0;
@@ -87,7 +106,7 @@ GetEspaceLeft : function(element)
     }
 
   }
-  console.log(Eleft)
+
   espaceLeftFi = espaceLeft + Eleft;
 
 },
@@ -97,11 +116,11 @@ for ( var t = 0; t < elements.length ; t++)
 {
 api.GetSibling(t);
 api.GetEspaceLeft(TabChild);
-console.log(TabChild)
-console.log(espaceLeft)
-console.log(espaceLeftFi)
+api.GetEspaceTop(TabChild);
+
 nbrchild = this.GetNbrElements(TabChild);
 DeltaX = (( nbrchild - 1) * espaceLeftFi )/2
+
 for ( var i = 0; i < elements.length ; i++)
 {
 for ( j in TabChild ){
@@ -112,7 +131,7 @@ for ( j in TabChild ){
           {
             TabChild[j].left = TabChild[(j-1)].left + espaceLeftFi;
           }
-        elements[i].top =  this.GetFather(t).top + espaceTop ;
+        elements[i].top =  this.GetFather(t).top + espaceTopFi ;
         elements[i].left = TabChild[j].left;
       }
 }
