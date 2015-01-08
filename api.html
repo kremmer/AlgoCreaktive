@@ -2,19 +2,20 @@
 <script>
 
 var elements = [];
-elements.push({id : "A",id_father : "" , top: 5, left: 6})
+elements.push({id : "A",id_father : "" , top: 5, left: 10})
 elements.push({id : "B",id_father : "A", top: 15, left: 30})
 elements.push({id : "C",id_father : "A", top: 9, left: 12})
-elements.push({id : "D",id_father : "B", top: 50, left: 8})
+elements.push({id : "D",id_father : "A", top: 50, left: 8})
+elements.push({id : "E",id_father : "B", top: 50, left: 8})
 var ElementIdF = [];
 var Result = [];
 var TabChild = [];
 var Father = [];
-var level = 0;
 var espaceTop = 10;
 var espaceLeft = 10;
 var center = 20;
-var baricentre =0;
+var nbrchild=0;
+var DeltaX =0;
 var api ={
 
   GetNbrElements : function(element)
@@ -31,15 +32,15 @@ var api ={
   }
  ,
 
- GetFirstChild : function()
+ GetFirstChild : function(element)
  {
-  return this.GetElement(0);
+  return this.GetElement(0, element);
   }
  ,
 
- GetLastchild : function(element)
+ GetLastChild : function(element)
  {
-   return this.GetElement(this.GetNbrElements() - 1,element);
+   return this.GetElement( (this.GetNbrElements(element) - 1), element);
  },
 
  GetFirstParent : function(element)
@@ -107,36 +108,35 @@ var api ={
 // api.GetTabIdF();
 // api.GetLastChildrenTree();
 api.GetSibling();
+nbrchild = this.GetNbrElements(TabChild);
+console.log(nbrchild)
+DeltaX = (( nbrchild - 1) * espaceLeft )/2
 for ( var i = 0; i < elements.length ; i++)
 {
-  for ( i in elements)
-  {
 for ( j in TabChild ){
-    if (elements[i].id == this.GetFirstParent(elements).id)
-    {
-      elements[i].top = center;
-      elements[i].left = center;
-      }
+    // if (elements[i].id == this.GetFirstParent(elements).id)
+    // {
+    //   elements[i].top = center;
+    //   elements[i].left = center;
+    //   }
       if (elements[i].id == TabChild[j].id)
       {
+        TabChild[0].left = (this.GetFirstParent(elements).left - DeltaX)
+        console.log(TabChild[0])
           if ( j >= 1)
           {
-            console.log(TabChild[j])
-            TabChild[j].left = TabChild[0].left + espaceLeft;
+            TabChild[j].left = TabChild[(j-1)].left + espaceLeft;
           }
-        elements[i].top = center + espaceTop;
+        elements[i].top =  this.GetFirstParent(elements).top + espaceTop;
         elements[i].left = TabChild[j].left;
       }
-
-//       for ( l = TabChild.length; elements[i].id_father == this.GetFirstParent(elements).id & l >= 0; l-- )
-// {
-//   baricentre = this.GetLastChild.id
-// }
 }
+
+
 
 }
 
-}
+
 
     return elements;
 
