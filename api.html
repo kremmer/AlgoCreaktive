@@ -4,16 +4,14 @@
 var elements = [];
 elements.push({id : "A",id_father : "" , top: 5, left: 10})
 elements.push({id : "B",id_father : "A", top: 15, left: 30})
-elements.push({id : "C",id_father : "A", top: 9, left: 12})
-elements.push({id : "D",id_father : "A", top: 50, left: 8})
-elements.push({id : "E",id_father : "B", top: 50, left: 8})
-var ElementIdF = [];
-var Result = [];
+elements.push({id : "C",id_father : "B", top: 9, left: 12})
+elements.push({id : "D",id_father : "B", top: 50, left: 8})
+elements.push({id : "E",id_father : "C", top: 50, left: 8})
+
 var TabChild = [];
 var Father = [];
 var espaceTop = 10;
 var espaceLeft = 10;
-var center = 20;
 var nbrchild=0;
 var DeltaX =0;
 var api ={
@@ -56,9 +54,16 @@ var api ={
    }
  }
  },
- GetSibling : function()
+ GetFather : function (i)
  {
-   Father.push(this.GetFirstParent(elements).id);
+   return this.GetElement(i, elements);
+
+ },
+ GetSibling : function(i)
+ {
+   Father = [];
+   TabChild = [];
+   Father.push(this.GetFather(i).id);
 
    for ( i in elements)
    {
@@ -70,109 +75,35 @@ var api ={
    return TabChild;
  }
 ,
-//  GetTabIdF : function (){
-//
-//    for ( var i = 0; i < elements.length ; i++)
-//    {
-//      for ( i in elements)// Ajoute les Id_father dans un autre tableau si ils sont != de ""
-//      {
-//        if (elements[i].id_father != "")
-//        {
-//          ElementIdF.push(elements[i].id_father);
-//        }
-//      }
-//    }
-//  },
-//
-//  GetLastChildrenTree : function (){
-//    for ( var i = 0; i < elements.length ; i++)
-//    {
-//      var k = 0;
-//      for ( var j = 0; j <= elements.length & k == 0 ; j++)
-//      {
-//        if ( elements[i].id == ElementIdF[j])
-//        {
-//          k = 1;
-//        }
-//        if ( j == elements.length )
-//        {
-//          Result.push(elements[i].id);
-//        }
-//      }
-//    }
-//  }
-// ,
+
   alignH : function(elements){
+for ( var t = 0; t < elements.length ; t++)
+{
 
-
-// api.GetTabIdF();
-// api.GetLastChildrenTree();
-api.GetSibling();
+api.GetSibling(t);
 nbrchild = this.GetNbrElements(TabChild);
-console.log(nbrchild)
+
 DeltaX = (( nbrchild - 1) * espaceLeft )/2
 for ( var i = 0; i < elements.length ; i++)
 {
+
 for ( j in TabChild ){
-    // if (elements[i].id == this.GetFirstParent(elements).id)
-    // {
-    //   elements[i].top = center;
-    //   elements[i].left = center;
-    //   }
       if (elements[i].id == TabChild[j].id)
       {
-        TabChild[0].left = (this.GetFirstParent(elements).left - DeltaX)
-        console.log(TabChild[0])
+        TabChild[0].left = (this.GetFather(t).left - DeltaX)
           if ( j >= 1)
           {
             TabChild[j].left = TabChild[(j-1)].left + espaceLeft;
           }
-        elements[i].top =  this.GetFirstParent(elements).top + espaceTop;
+        elements[i].top =  this.GetFather(t).top + espaceTop;
         elements[i].left = TabChild[j].left;
       }
 }
-
-
-
 }
-
-
-
+}
     return elements;
 
   }
-,
-
-alignV : function (elements){
-
-  var center = 20;
-  // api.GetTabIdF();
-  // api.GetLastChildrenTree();
-  api.GetSibling();
-
-  for ( var i = 0; i < elements.length ; i++)
-  {
-    for ( i in elements)
-    {
-      for ( j in TabChild ){
-        if (elements[i].id == this.GetFirstParent(elements).id)
-        {
-
-          elements[i].top = center;
-          elements[i].left = center;
-
-        }
-        if (elements[i].id == TabChild[j].id)
-        {
-          elements[i].top = 40 ;
-          elements[i].left = center;
-        }
-      }
-    }
-  }
-  return elements;
-
-}
 }
 
 
