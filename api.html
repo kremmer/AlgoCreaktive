@@ -4,162 +4,105 @@
 </head>
 <body>
 
-<div id="container"> </div>
-<script src="jquery-2.1.1.js"></script>
-<style> .el{
-  position: absolute;
-}
-</style>
-<script>
+  <div id="container"> </div>
+  <script src="jquery-2.1.1.js"></script>
+  <style> .el{
+    position: absolute;
+  }
+  </style>
+  <script>
+  var elements = [];
+  elements.push({id : "A",id_father : "" , top: 50, left: 100})
+  elements.push({id : "B",id_father : "A", top: 150, left: 300})
+  elements.push({id : "C",id_father : "A", top: 90, left: 120})
+  elements.push({id : "D",id_father : "B", top: 500, left: 80})
+  elements.push({id : "E",id_father : "A", top: 500, left: 80})
 
-
-
-
-var elements = [];
-elements.push({id : "A",id_father : "" , top: 50, left: 100, longueurX: 10, largueurY: 10})
-elements.push({id : "B",id_father : "A", top: 150, left: 300,longueurX: 10, largueurY: 10})
-elements.push({id : "C",id_father : "A", top: 90, left: 120, longueurX: 10, largueurY: 10})
-elements.push({id : "D",id_father : "A", top: 500, left: 80, longueurX: 10, largueurY: 10})
-elements.push({id : "E",id_father : "C", top: 500, left: 80, longueurX: 10, largueurY: 10})
-
-var TabChild = [];
-
-var espaceTop = 10;
-var espaceLeft = 10;
-var espace
-var espaceTopFi =0;
-var espaceLeftFi=0;
-
-var nbrchild=0;
-var DeltaX =0;
-var api ={
-  render : function(elements)
-{
-  elements.forEach(function(el)
+  var api ={
+    render : function(tableau, color)
   {
-    var html = "<div class='el' style='top:"+el.top+"px;left:"+el.left+"px;width:"+el.longueurX+"; height:"+el.largueurY+";background:red'><small>"+el.id+"</small></div>";
+    elements.forEach(function(el)
+  {
+    var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width: 10; height:10;background:"+color+"'></div>";
     $('#container').append(html)
   });
-},
-  GetNbrElements : function(tableau)
-    {
-  // if(this.elements == null)
-  //   return 0;
-  //   else
-      return tableau.length;
-    },
-
-  GetElement : function(i,tableau)
-  {
-  return tableau[i];
-  }
- ,
-
- GetFirstChild : function(tableau)
- {
-  return this.GetElement(0, tableau);
-  }
- ,
-
- GetLastChild : function(tableau)
- {
-   return this.GetElement( (this.GetNbrElements(tableau) - 1), tableau);
- },
-
- // GetFirstParent : function(tableau)
- // {
- //   for ( i in elements)
- //   {
- //  if (elements[i].id_father == "" )
- //  {
- //     return this.GetElement(i, tableau);
- //   }
- //   else {
- //     return null
- //   }
- // }
- // },
- GetSibling : function(father)
- {
-   TabChild = [];
-   for ( i in elements)
-   {
-     if ( elements[i].id_father == this.GetElement(father, elements).id ){
-
-       TabChild.push(elements[i])
-     }
-   }
-   return TabChild;
- }
+}
 ,
-GetEspaceTop : function(tableau)
+GetFather : function(father)
 {
-  var Etop = 0;
-  for ( var l = 0; l < tableau.length ; l++)
+  for ( i in elements)
   {
-    if ( tableau[l].largueurY > Etop)
-    {
-      Etop = tableau[l].largueurY;
+    if ( elements[i].id == father ){
+
+      return elements[i];
     }
-
   }
-
-  espaceTopFi = espaceTop + Etop;
-
-},
-GetEspaceLeft : function(tableau)
+}
+,
+GetLastChild : function()
 {
-  var Eleft = 0;
-  for ( var l = 0; l < tableau.length ; l++)
+  return TabChild[(TabChild.length - 1)];
+},
+
+GetChilds : function(father)
+{
+  TabChild = [];
+  for ( i in elements)
   {
-    if ( tableau[l].longueurX > Eleft)
-    {
-      Eleft = tableau[l].longueurX;
+    if ( elements[i].id_father == father ){
+
+      TabChild.push(elements[i])
     }
-
   }
+  return TabChild;
+}
+,
+GetDeltaX : function(espaceLeft)
+{
+  var espace=0;
+  nbrchild = TabChild.length;
+  if ( TabChild.length > 0 )
+  {
+    espace = ( $("#"+TabChild[0].id+"").width() + $("#"+this.GetLastChild().id+"").width()) / 2;
 
-  espaceLeftFi = espaceLeft + Eleft;
+    for ( var a = 1; a < TabChild.length - 1 ; a++ )
+    {
+      espace = espace +  $("#"+TabChild[a].id+"").width();
+    }
+  }
+  DeltaX = (( nbrchild - 1) * espaceLeft + espace ) /2 ;
 
+  return DeltaX;
 },
-  alignH : function(elements){
-for ( var t = 0; t < elements.length ; t++)
+ChangePosition : function(father, espaceTop, espaceLeft)
 {
-api.GetSibling(t);
-if ( TabChild.length > 0 )
-{
-espace = ( this.GetFirstChild(TabChild).longueurX + this.GetLastChild(TabChild).longueurX ) / 2;
-console.log(espace)
-for ( var a = 1; a < TabChild.length - 1 ; a++ )
-{
-espace = espace + TabChild[a].longueurX;
-}
+  for ( j in TabChild )
+  {
+    TabChild[0].left = this.GetFather(father).left - DeltaX
+    if ( j >= 1)
+    {
 
-}
+      TabChild[j].left = TabChild[(j-1)].left + ( $("#"+TabChild[(j-1)].id+"").width() / 2 ) + ( $("#"+TabChild[j].id+"").width() / 2 ) + espaceLeft;
 
-nbrchild = this.GetNbrElements(TabChild);
-DeltaX = (( nbrchild - 1) * espaceLeft )/2 + espace
-
-for ( var i = 0; i < elements.length ; i++)
-{
-for ( j in TabChild ){
-      if (elements[i].id == TabChild[j].id)
-      {
-        TabChild[0].left = (this.GetElement(t, elements).left - DeltaX)
-          if ( j >= 1)
-          {
-            TabChild[j].left = TabChild[(j-1)].left + ( TabChild[(j-1)].longueurX / 2 ) + ( TabChild[(j)].longueurX / 2 ) + espaceLeft;
-          }
-        elements[i].top =  this.GetElement(t, elements).top + espaceTop ;
-        elements[i].left = TabChild[j].left;
-      }
-}
-}
-}
-
-    return elements;
-
+    }
+    TabChild[j].top = this.GetFather(father).top + espaceTop
   }
+  return TabChild;
+},
+
+alignH : function(father, espaceLeft, espaceTop){
+
+
+  api.render(elements, "white");
+
+  var TabChild = api.GetChilds(father);
+
+  var DeltaX = api.GetDeltaX(espaceLeft);
+
+  var TabChildPosition = api.ChangePosition(father, espaceTop, espaceLeft);
+  return TabChildPosition;
+
+}
 }
 
 </script>
