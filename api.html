@@ -11,6 +11,8 @@
   }
   </style>
   <script>
+
+
   var elements = [];
   elements.push({id : "A",id_father : "" , top: 50, left: 100})
   elements.push({id : "B",id_father : "A", top: 150, left: 300})
@@ -18,8 +20,11 @@
   elements.push({id : "D",id_father : "B", top: 500, left: 80})
   elements.push({id : "E",id_father : "A", top: 500, left: 80})
 
-  var api ={
-    render : function(tableau, color)
+
+
+  var lib ={
+
+render : function(tableau, color)
   {
     elements.forEach(function(el)
   {
@@ -57,7 +62,8 @@ GetChilds : function(father)
   return TabChild;
 }
 ,
-GetDeltaX : function(espaceLeft)
+
+GetDeltaXH : function(espaceLeftH)
 {
   var espace=0;
   nbrchild = TabChild.length;
@@ -70,11 +76,12 @@ GetDeltaX : function(espaceLeft)
       espace = espace +  $("#"+TabChild[a].id+"").width();
     }
   }
-  DeltaX = (( nbrchild - 1) * espaceLeft + espace ) /2 ;
+  DeltaXH = (( nbrchild - 1) * espaceLeftH + espace ) /2 ;
 
-  return DeltaX;
+  return DeltaXH;
 },
-GetDeltaY : function(father, espaceTop)
+
+GetDeltaYH : function(father, espaceTopH)
 {
   var plusGrosseBulle = 0;
 
@@ -85,39 +92,110 @@ GetDeltaY : function(father, espaceTop)
       plusGrosseBulle = $("#"+TabChild[z].id+"").height();
     }
   }
-  DeltaY = ( ( $("#"+this.GetFather(father).id+"").height() + plusGrosseBulle ) / 2 + espaceTop );
-  return DeltaY;
+  DeltaYH = ( ( $("#"+this.GetFather(father).id+"").height() + plusGrosseBulle ) / 2 + espaceTopH );
+  return DeltaYH;
 },
-ChangePosition : function(father, espaceTop, espaceLeft)
+
+
+ChangePositionH : function(father, espaceTopH, espaceLeftH)
 {
 
   for ( j in TabChild )
   {
-    TabChild[0].left = this.GetFather(father).left - DeltaX
+    TabChild[0].left = this.GetFather(father).left - DeltaXH
     if ( j >= 1)
     {
-
-      TabChild[j].left = TabChild[(j-1)].left + ( $("#"+TabChild[(j-1)].id+"").width() / 2 ) + ( $("#"+TabChild[j].id+"").width() / 2 ) + espaceLeft;
-
+      TabChild[j].left = TabChild[(j-1)].left + ( $("#"+TabChild[(j-1)].id+"").width() / 2 ) + ( $("#"+TabChild[j].id+"").width() / 2 ) + espaceLeftH;
     }
-    TabChild[j].top = this.GetFather(father).top + DeltaY
+    TabChild[j].top = this.GetFather(father).top + DeltaYH
   }
   return TabChild;
 },
 
-alignH : function(father, espaceLeft, espaceTop){
 
+alignH : function(father, espaceLeftH, espaceTopH)
+{
 
-  api.render(elements, "white");
+  lib.render(elements, "white");
 
-  var TabChild = api.GetChilds(father);
-  var DeltaY = api.GetDeltaY(father, espaceTop)
-  var DeltaX = api.GetDeltaX(espaceLeft);
+  var TabChild = lib.GetChilds(father);
+  var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
+  var DeltaXH = lib.GetDeltaXH(espaceLeftH);
 
-  var TabChildPosition = api.ChangePosition(father, espaceTop, espaceLeft);
+  var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
   return TabChildPosition;
 
-}
+},
+
+
+
+
+
+
+GetDeltaYV : function(espaceTopV)
+{
+  var espace=0;
+  if ( TabChild.length > 0 )
+  {
+    espace = ( $("#"+TabChild[0].id+"").height() + $("#"+this.GetLastChild().id+"").height()) / 2;
+    for ( a in TabChild )
+    {
+      espace = espace +  $("#"+TabChild[a].id+"").height();
+    }
+  }
+
+  DeltaYV = (( TabChild.length - 1) * espaceTopV + espace ) /2 ;
+  return DeltaYV;
+},
+
+
+GetDeltaXV : function(father, espaceLeftV)
+{
+  var plusGrosseBulle = 0;
+
+  for ( z in TabChild)
+  {
+    if ($("#"+TabChild[z].id+"").width() > plusGrosseBulle )
+    {
+      plusGrosseBulle = $("#"+TabChild[z].id+"").width();
+    }
+  }
+  DeltaXV = ( ( $("#"+this.GetFather(father).id+"").width() + plusGrosseBulle ) / 2 + espaceLeftV );
+  return DeltaXV;
+},
+
+
+ChangePositionV : function(father, espaceTopV, espaceLeftV)
+{
+
+  for ( j in TabChild )
+  {
+    TabChild[0].top = this.GetFather(father).top - DeltaYV
+    if ( j >= 1)
+    {
+      TabChild[j].top = TabChild[(j-1)].tpo + ( $("#"+TabChild[(j-1)].id+"").height() / 2 ) + ( $("#"+TabChild[j].id+"").height() / 2 ) + espaceTopV;
+    }
+    TabChild[j].left = this.GetFather(father).left + DeltaXV
+  }
+  return TabChild;
+},
+
+
+alignV : function(father, espaceTopV, espaceLeftV)
+{
+
+  lib.render(elements, "white");
+
+  var TabChild = lib.GetChilds(father);
+  var DeltaYV = lib.GetDeltaYV(espaceTopV);
+  var DeltaXV = lib.GetDeltaXV(father, espaceLeftV);
+
+  var TabChildPosition = lib.ChangePositionV(father, espaceTopV, espaceLeftV);
+  return TabChildPosition;
+
+},
+
+
 }
 
 </script>
