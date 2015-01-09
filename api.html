@@ -28,7 +28,11 @@ render : function(tableau, color)
   {
     elements.forEach(function(el)
   {
+<<<<<<< Updated upstream
     var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width: 10; height:10;background:"+color+"'><small>"+el.id+"</small></div>";
+=======
+    var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width: 20; height:20;background:"+color+"'></div>";
+>>>>>>> Stashed changes
     $('#container').append(html)
   });
 }
