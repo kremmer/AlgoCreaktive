@@ -74,8 +74,23 @@ GetDeltaX : function(espaceLeft)
 
   return DeltaX;
 },
+GetDeltaY : function(father, espaceTop)
+{
+  var plusGrosseBulle = 0;
+
+  for ( z in TabChild)
+  {
+    if ($("#"+TabChild[z].id+"").height() > plusGrosseBulle )
+    {
+      plusGrosseBulle = $("#"+TabChild[z].id+"").height();
+    }
+  }
+  DeltaY = ( ( $("#"+this.GetFather(father).id+"").height() + plusGrosseBulle ) / 2 + espaceTop );
+  return DeltaY;
+},
 ChangePosition : function(father, espaceTop, espaceLeft)
 {
+
   for ( j in TabChild )
   {
     TabChild[0].left = this.GetFather(father).left - DeltaX
@@ -85,7 +100,7 @@ ChangePosition : function(father, espaceTop, espaceLeft)
       TabChild[j].left = TabChild[(j-1)].left + ( $("#"+TabChild[(j-1)].id+"").width() / 2 ) + ( $("#"+TabChild[j].id+"").width() / 2 ) + espaceLeft;
 
     }
-    TabChild[j].top = this.GetFather(father).top + espaceTop
+    TabChild[j].top = this.GetFather(father).top + DeltaY
   }
   return TabChild;
 },
@@ -96,7 +111,7 @@ alignH : function(father, espaceLeft, espaceTop){
   api.render(elements, "white");
 
   var TabChild = api.GetChilds(father);
-
+  var DeltaY = api.GetDeltaY(father, espaceTop)
   var DeltaX = api.GetDeltaX(espaceLeft);
 
   var TabChildPosition = api.ChangePosition(father, espaceTop, espaceLeft);
