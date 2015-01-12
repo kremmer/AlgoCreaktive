@@ -1,3 +1,6 @@
+<html>
+<div id="container"> </div>
+
   <script src="jquery-2.1.1.js"></script>
   <script>
   var elements = [];
@@ -12,7 +15,7 @@
   {
     elements.forEach(function(el)
   {
-    var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width: 20; height:20;background:"+color+"'></div>";
+    var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width:"Math.floor((Math.random() * 30) + 10)"; height:"Math.floor((Math.random() * 80) + 10)"background:"+color+"'></div>";
     $('#container').append(html)
   });
 }
@@ -97,7 +100,7 @@ ChangePosition : function(father, espaceTop, espaceLeft)
 alignH : function(father, espaceLeft, espaceTop){
 
 
-  api.render(elements, "white");
+  // api.render(elements, "white");
 
   var TabChild = api.GetChilds(father);
   var DeltaY = api.GetDeltaY(father, espaceTop)
@@ -110,3 +113,4 @@ alignH : function(father, espaceLeft, espaceTop){
 }
 
 </script>
+<
