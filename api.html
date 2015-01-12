@@ -19,34 +19,19 @@
   elements.push({id : "F",id_father : "A", top: 200, left: 90})
   elements.push({id : "G",id_father : "A", top: 300, left: 120})
   elements.push({id : "H",id_father : "A", top: 100, left: 145})
-<<<<<<< HEAD
 
 
   var lib ={
 animate : function(tableau, color)
-=======
-
-
-
-  var lib ={
-Change : function(tableau, color)
->>>>>>> origin/DevEric
 {
   tableau.forEach(function(el)
 {
   $('#'+el.id+'').animate({
     top : ''+el.top+'px', left : ''+el.left+'px'
   },'slow');
-<<<<<<< HEAD
-  $('#'+el.id+'').css({
-    background : ''+color+''
-=======
 
   $('#'+el.id+'').css({
-
     background : ''+color+''
-
->>>>>>> origin/DevEric
   });
 });
 },
@@ -118,10 +103,6 @@ ChangePositionH : function(father, espaceTopH, espaceLeftH)
   for ( j in TabChild )
   {
     TabChild[0].left = this.GetFather(father).left + ( $("#"+this.GetFather(father).id+"").width() /2) - DeltaXH
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/DevEric
     if ( j >= 1)
     {
       TabChild[j].left = TabChild[(j-1)].left +  $("#"+TabChild[(j-1)].id+"").width() + espaceLeftH;
@@ -130,31 +111,16 @@ ChangePositionH : function(father, espaceTopH, espaceLeftH)
   }
   return TabChild;
 },
-<<<<<<< HEAD
-=======
 
-
->>>>>>> origin/DevEric
 alignH : function(father, espaceLeftH, espaceTopH )
 {
   var TabChild = lib.GetChilds(father);
-<<<<<<< HEAD
+
     var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
     var DeltaXH = lib.GetDeltaXH(espaceLeftH);
     var DeltaYH = 0;
     var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-=======
 
-
-    var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
-    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-
-
-    var DeltaYH = 0;
-    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-
-
->>>>>>> origin/DevEric
   var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
   return TabChildPosition;
 },
