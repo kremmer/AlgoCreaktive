@@ -25,7 +25,7 @@
 
 
   var lib ={
-<<<<<<< HEAD
+
     AddBoard : function ( tableau, tableauAjouter)
   {
     for ( i in tableauAjouter)
@@ -33,10 +33,10 @@
       tableau.push(tableauAjouter[i])
     }
   },
-  Change : function(tableau, color)
-=======
+
+
 animate : function(tableau, color)
->>>>>>> FETCH_HEAD
+
 {
   tableau.forEach(function(el)
 {
@@ -51,7 +51,7 @@ animate : function(tableau, color)
 },
 
 render : function(tableau, color)
-<<<<<<< HEAD
+
 {
   elements.forEach(function(el)
 {
@@ -62,16 +62,10 @@ render : function(tableau, color)
 });
 }
 ,
-=======
-  {
-    elements.forEach(function(el)
-  {
-    var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width:"+Math.floor((Math.random() * 50) + 10)+"; height:"+Math.floor((Math.random() * 50) + 10)+";background:"+color+"'><spam>"+el.id+"</div>";
-    $('#container').append(html)
-  });
-},
 
->>>>>>> FETCH_HEAD
+
+
+
 GetFather : function(father)
 {
   for ( i in elements)
@@ -155,7 +149,7 @@ alignH : function(father, espaceLeftH, espaceTopH )
 {
   var TabChild = lib.GetChilds(father);
 
-<<<<<<< HEAD
+
 
   var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
   var DeltaXH = lib.GetDeltaXH(espaceLeftH);
@@ -163,12 +157,12 @@ alignH : function(father, espaceLeftH, espaceTopH )
 
   var DeltaYH = 0;
   var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-=======
+
     var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
     var DeltaXH = lib.GetDeltaXH(espaceLeftH);
     var DeltaYH = 0;
     var DeltaXH = lib.GetDeltaXH(espaceLeftH);
->>>>>>> FETCH_HEAD
+
 
   var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
   return TabChildPosition;
@@ -221,7 +215,7 @@ alignV : function(father, espaceTopV, espaceLeftV)
   var TabChildPosition = lib.ChangePositionV(father, espaceTopV, espaceLeftV);
   return TabChildPosition;
 },
-<<<<<<< HEAD
+
 GetFeuilles : function(tableau, feuilles)
 {
   var TabChildsIntermediaire =[];
@@ -242,15 +236,13 @@ GetFeuilles : function(tableau, feuilles)
 
 GetAllFeuilles : function(tableau)
 {
-
   var TabFeuilles =[];
   TabDChilds = lib.GetFeuilles(tableau, TabFeuilles)
    for ( var f = 0; TabDChilds.length > 0; f++)
    {
     TabDChilds = lib.GetFeuilles(TabDChilds, TabFeuilles)
   }
-  console.log(TabDChilds)
-  console.log(TabFeuilles)
+  
 return TabFeuilles;
 },
 
@@ -277,9 +269,9 @@ alignHF : function(father, espaceTopV, espaceLeftV)
 }
 
 
-=======
-}
->>>>>>> FETCH_HEAD
+
+
+
 </script>
 </body>
 </html>
