@@ -14,16 +14,19 @@
 
 
   var elements = [];
-  elements.push({id : "A",id_father : "" , top: 50, left: 100})
+  elements.push({id : "A",id_father : "" , top: 250, left: 400})
   elements.push({id : "B",id_father : "A", top: 150, left: 300})
   elements.push({id : "C",id_father : "A", top: 90, left: 120})
-  elements.push({id : "D",id_father : "B", top: 500, left: 80})
-  elements.push({id : "E",id_father : "C", top: 500, left: 80})
+  elements.push({id : "D",id_father : "A", top: 500, left: 80})
+  elements.push({id : "E",id_father : "A", top: 400, left: 50})
+  elements.push({id : "F",id_father : "A", top: 200, left: 90})
+  elements.push({id : "G",id_father : "A", top: 300, left: 120})
+  elements.push({id : "H",id_father : "A", top: 100, left: 145})
 
 
 
   var lib ={
-Change : function(tableau)
+Change : function(tableau, color)
 {
   tableau.forEach(function(el)
 {
@@ -32,10 +35,10 @@ Change : function(tableau)
     top : ''+el.top+'px', left : ''+el.left+'px'
 
   },'slow');
-  console.log(top)
+
   $('#'+el.id+'').css({
 
-    background : 'red'
+    background : ''+color+''
 
   });
 });
@@ -123,9 +126,7 @@ ChangePositionH : function(father, espaceTopH, espaceLeftH)
   for ( j in TabChild )
   {
     TabChild[0].left = this.GetFather(father).left + ( $("#"+this.GetFather(father).id+"").width() /2) - DeltaXH
-    console.log($("#"+this.GetFather(father).id+"").width() /2)
-    console.log( this.GetFather(father).left)
-    console.log( DeltaXH)
+
     if ( j >= 1)
     {
       TabChild[j].left = TabChild[(j-1)].left +  $("#"+TabChild[(j-1)].id+"").width() + espaceLeftH;
@@ -138,14 +139,21 @@ ChangePositionH : function(father, espaceTopH, espaceLeftH)
 },
 
 
-alignH : function(father, espaceLeftH, espaceTopH)
+alignH : function(father, espaceLeftH, espaceTopH )
 {
 
 
 
   var TabChild = lib.GetChilds(father);
-  var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
-  var DeltaXH = lib.GetDeltaXH(espaceLeftH);
+
+
+    var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
+    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
+
+
+    var DeltaYH = 0;
+    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
+
 
   var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
   return TabChildPosition;
