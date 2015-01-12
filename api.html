@@ -158,10 +158,7 @@ alignH : function(father, espaceLeftH, espaceTopH )
   var DeltaYH = 0;
   var DeltaXH = lib.GetDeltaXH(espaceLeftH);
 
-    var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
-    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-    var DeltaYH = 0;
-    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
+
 
 
   var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
@@ -215,7 +212,23 @@ alignV : function(father, espaceTopV, espaceLeftV)
   var TabChildPosition = lib.ChangePositionV(father, espaceTopV, espaceLeftV);
   return TabChildPosition;
 },
+GetNbColonne : function()
+{
+var TabColonne =[];
+  for ( var i = 0; i < elements.length; i++)
+  {
+    lib.GetAllFeuilles(elements[i].id)
 
+    if ( lib.GetAllFeuilles(elements[i].id).length < 1)
+    {
+      TabColonne.push({id : elements[i].id, nbrC : 1 })
+    }else{
+TabColonne.push({id : elements[i].id, nbrC : lib.GetAllFeuilles(elements[i].id).length })
+}
+  }
+return TabColonne;
+
+},
 GetFeuilles : function(tableau, feuilles)
 {
   var TabChildsIntermediaire =[];
@@ -234,15 +247,15 @@ GetFeuilles : function(tableau, feuilles)
   return TabChildsIntermediaire;
 },
 
-GetAllFeuilles : function(tableau)
+GetAllFeuilles : function(father)
 {
   var TabFeuilles =[];
-  TabDChilds = lib.GetFeuilles(tableau, TabFeuilles)
+  var TabDChilds = lib.GetChilds(father);
    for ( var f = 0; TabDChilds.length > 0; f++)
    {
     TabDChilds = lib.GetFeuilles(TabDChilds, TabFeuilles)
   }
-  
+
 return TabFeuilles;
 },
 
@@ -261,7 +274,7 @@ test : function()
 
 alignHF : function(father, espaceTopV, espaceLeftV)
 {
-  var TabFirstChild = lib.GetChilds(father);
+
 
 
 },
