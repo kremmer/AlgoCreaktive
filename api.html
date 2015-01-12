@@ -18,15 +18,25 @@
   elements.push({id : "B",id_father : "A", top: 150, left: 300})
   elements.push({id : "C",id_father : "A", top: 90, left: 120})
   elements.push({id : "D",id_father : "A", top: 500, left: 80})
-  elements.push({id : "E",id_father : "A", top: 400, left: 50})
-  elements.push({id : "F",id_father : "A", top: 200, left: 90})
-  elements.push({id : "G",id_father : "A", top: 300, left: 120})
-  elements.push({id : "H",id_father : "A", top: 100, left: 145})
+  elements.push({id : "E",id_father : "B", top: 400, left: 50})
+  elements.push({id : "F",id_father : "B", top: 200, left: 90})
+  elements.push({id : "G",id_father : "B", top: 300, left: 120})
+  elements.push({id : "H",id_father : "E", top: 200, left: 90})
+  elements.push({id : "J",id_father : "E", top: 150, left: 145})
+  elements.push({id : "K",id_father : "E", top: 120, left: 125})
+  elements.push({id : "I",id_father : "G", top: 70, left: 105})
 
 
 
   var lib ={
-Change : function(tableau, color)
+    AddBoard : function ( tableau, tableauAjouter)
+  {
+    for ( i in tableauAjouter)
+    {
+      tableau.push(tableauAjouter[i])
+    }
+  },
+  Change : function(tableau, color)
 {
   tableau.forEach(function(el)
 {
@@ -45,14 +55,14 @@ Change : function(tableau, color)
 },
 
 render : function(tableau, color)
-  {
-    elements.forEach(function(el)
-  {
+{
+  elements.forEach(function(el)
+{
 
-    var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width:"+Math.floor((Math.random() * 50) + 10)+"; height:"+Math.floor((Math.random() * 50) + 10)+";background:"+color+"'><spam>"+el.id+"</div>";
+  var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width:"+Math.floor((Math.random() * 50) + 10)+"; height:"+Math.floor((Math.random() * 50) + 10)+";background:"+color+"'><spam>"+el.id+"</div>";
 
-    $('#container').append(html)
-  });
+  $('#container').append(html)
+});
 }
 ,
 GetFather : function(father)
@@ -77,6 +87,18 @@ GetChilds : function(father)
   for ( i in elements)
   {
     if ( elements[i].id_father == father ){
+
+      TabChild.push(elements[i])
+    }
+  }
+  return TabChild;
+}
+,GetChildFeuille : function(tableau, j)
+{
+  TabChild = [];
+  for ( i in elements)
+  {
+    if ( elements[i].id_father == tableau[j].id ){
 
       TabChild.push(elements[i])
     }
@@ -147,12 +169,12 @@ alignH : function(father, espaceLeftH, espaceTopH )
   var TabChild = lib.GetChilds(father);
 
 
-    var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
-    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
+  var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
+  var DeltaXH = lib.GetDeltaXH(espaceLeftH);
 
 
-    var DeltaYH = 0;
-    var DeltaXH = lib.GetDeltaXH(espaceLeftH);
+  var DeltaYH = 0;
+  var DeltaXH = lib.GetDeltaXH(espaceLeftH);
 
 
   var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
@@ -227,9 +249,59 @@ alignV : function(father, espaceTopV, espaceLeftV)
   return TabChildPosition;
 
 },
+GetFeuilles : function(tableau, feuilles)
+{
+  var TabChildsIntermediaire =[];
+  var TabChilds = tableau;
+  for ( f in TabChilds)
+  {
+    var TabChildFeuille = lib.GetChilds(TabChilds[f].id)
+    if ( TabChildFeuille.length < 1)
+    {
+      feuilles.push(TabChilds[f])
+    }else
+    {
+      lib.AddBoard(TabChildsIntermediaire, TabChildFeuille);
+    }
+  }
+  return TabChildsIntermediaire;
+},
 
+GetAllFeuilles : function(tableau)
+{
+  var TabFeuilles =[];
+  TabDChilds = lib.GetFeuilles(tableau, TabFeuilles)
+   for ( var f = 0; TabDChilds.length > 0; f++)
+   {
+    TabDChilds = lib.GetFeuilles(TabDChilds, TabFeuilles)
+  }
+  console.log(TabDChilds)
+  console.log(TabFeuilles)
+return TabFeuilles;
+},
+
+test : function()
+{
+  var tabtest = TabChild;
+  // var test = lib.GetChildFeuille(elements, 0);
+  //
+  // if ( test.length < 1)
+  // {
+  //   tabtest.push(elements[0])
+  // }
+
+  console.log(tabtest)
+},
+
+alignHF : function(father, espaceTopV, espaceLeftV)
+{
+  var TabFirstChild = lib.GetChilds(father);
+
+
+},
 
 }
+
 
 </script>
 </body>
