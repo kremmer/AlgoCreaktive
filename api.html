@@ -27,6 +27,7 @@
   var lib ={
 
 
+
     AddBoard : function ( tableau, tableauAjouter)
   {
     for ( i in tableauAjouter)
@@ -222,7 +223,6 @@ TabColonne.push({id : elements[i].id, nbrC : lib.GetAllFeuilles(elements[i].id).
 }
   }
 return TabColonne;
-
 },
 
 GetFeuilles : function(tableau, feuilles)
@@ -261,9 +261,9 @@ GetColonneWidth : function(TabFeuilles)
   for (g in TabFeuilles){
       if ($("#"+TabFeuilles[g].id+"").width() > ColonneWidth )
     {
-       console.log(g)
+      //console.log(g)
       ColonneWidth = $("#"+TabFeuilles[g].id+"").width()
-      console.log(ColonneWidth)
+      //console.log(ColonneWidth)
     }
   }
   return ColonneWidth
@@ -271,27 +271,18 @@ GetColonneWidth : function(TabFeuilles)
 
 
 
-test : function()
+
+alignHF : function(father)
 {
-  var tabtest = TabChild;
-  // var test = lib.GetChildFeuille(elements, 0);
-  //
-  // if ( test.length < 1)
-  // {
-  //   tabtest.push(elements[0])
-  // }
+  var TabFeuilles = lib.GetAllFeuilles(father)
+  console.log(TabFeuilles)
+  var ColonneWidth = lib.GetColonneWidth(TabFeuilles)
+  console.log(ColonneWidth)
+  var TabColonne = lib.GetNbColonne()
+  console.log(TabColonne)
 
-  console.log(tabtest)
-},
-
-
-
-
-
-
-alignHF : function(father, espaceTopV, espaceLeftV)
-{
-
+  lib.render(father, "red")
+  lib.animate(lib.alignH(father, 10, 10), "blue")
 
 
 },
