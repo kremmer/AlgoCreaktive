@@ -26,6 +26,7 @@
 
   var lib ={
 
+
     AddBoard : function ( tableau, tableauAjouter)
   {
     for ( i in tableauAjouter)
@@ -36,14 +37,12 @@
 
 
 animate : function(tableau, color)
-
 {
   tableau.forEach(function(el)
 {
   $('#'+el.id+'').animate({
     top : ''+el.top+'px', left : ''+el.left+'px'
   },'slow');
-
   $('#'+el.id+'').css({
     background : ''+color+''
   });
@@ -51,20 +50,13 @@ animate : function(tableau, color)
 },
 
 render : function(tableau, color)
-
 {
   elements.forEach(function(el)
 {
-
   var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width:"+Math.floor((Math.random() * 50) + 10)+"; height:"+Math.floor((Math.random() * 50) + 10)+";background:"+color+"'><spam>"+el.id+"</div>";
-
   $('#container').append(html)
 });
-}
-,
-
-
-
+},
 
 GetFather : function(father)
 {
@@ -80,6 +72,7 @@ GetLastChild : function()
 {
   return TabChild[(TabChild.length - 1)];
 },
+
 GetChilds : function(father)
 {
   TabChild = [];
@@ -90,8 +83,9 @@ GetChilds : function(father)
     }
   }
   return TabChild;
-}
-,GetChildFeuille : function(tableau, j)
+},
+
+GetChildFeuille : function(tableau, j)
 {
   TabChild = [];
   for ( i in elements)
@@ -104,6 +98,7 @@ GetChilds : function(father)
   return TabChild;
 }
 ,
+
 GetDeltaXH : function(espaceLeftH)
 {
   var espace=0;
@@ -118,6 +113,7 @@ GetDeltaXH : function(espaceLeftH)
   DeltaXH = ((( nbrchild - 1) * espaceLeftH )+ espace ) /2 ;
   return DeltaXH;
 },
+
 GetDeltaYH : function(father, espaceTopH)
 {
   var plusGrosseBulle = 0;
@@ -131,6 +127,7 @@ GetDeltaYH : function(father, espaceTopH)
   DeltaYH = ( ( $("#"+this.GetFather(father).id+"").height() + plusGrosseBulle ) / 2 + espaceTopH );
   return DeltaYH;
 },
+
 ChangePositionH : function(father, espaceTopH, espaceLeftH)
 {
   for ( j in TabChild )
@@ -149,21 +146,15 @@ alignH : function(father, espaceLeftH, espaceTopH )
 {
   var TabChild = lib.GetChilds(father);
 
-
-
   var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
   var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-
-
   var DeltaYH = 0;
   var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-
-
-
 
   var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
   return TabChildPosition;
 },
+
 GetDeltaYV : function(espaceTopV)
 {
   var espace=0;
@@ -178,6 +169,7 @@ GetDeltaYV : function(espaceTopV)
   DeltaYV = (( TabChild.length - 1) * espaceTopV + espace ) /2 ;
   return DeltaYV;
 },
+
 GetDeltaXV : function(father, espaceLeftV)
 {
   var plusGrosseBulle = 0;
@@ -191,6 +183,7 @@ GetDeltaXV : function(father, espaceLeftV)
   DeltaXV = ( ( $("#"+this.GetFather(father).id+"").width() + plusGrosseBulle ) / 2 + espaceLeftV );
   return DeltaXV;
 },
+
 ChangePositionV : function(father, espaceTopV, espaceLeftV)
 {
   for ( j in TabChild )
@@ -204,6 +197,7 @@ ChangePositionV : function(father, espaceTopV, espaceLeftV)
   }
   return TabChild;
 },
+
 alignV : function(father, espaceTopV, espaceLeftV)
 {
   var TabChild = lib.GetChilds(father);
@@ -212,6 +206,7 @@ alignV : function(father, espaceTopV, espaceLeftV)
   var TabChildPosition = lib.ChangePositionV(father, espaceTopV, espaceLeftV);
   return TabChildPosition;
 },
+
 GetNbColonne : function()
 {
 var TabColonne =[];
@@ -229,6 +224,7 @@ TabColonne.push({id : elements[i].id, nbrC : lib.GetAllFeuilles(elements[i].id).
 return TabColonne;
 
 },
+
 GetFeuilles : function(tableau, feuilles)
 {
   var TabChildsIntermediaire =[];
@@ -255,9 +251,25 @@ GetAllFeuilles : function(father)
    {
     TabDChilds = lib.GetFeuilles(TabDChilds, TabFeuilles)
   }
-
 return TabFeuilles;
 },
+
+GetColonneWidth : function(TabFeuilles)
+{
+
+  var ColonneWidth = 0
+  for (g in TabFeuilles){
+      if ($("#"+TabFeuilles[g].id+"").width() > ColonneWidth )
+    {
+       console.log(g)
+      ColonneWidth = $("#"+TabFeuilles[g].id+"").width()
+      console.log(ColonneWidth)
+    }
+  }
+  return ColonneWidth
+},
+
+
 
 test : function()
 {
@@ -271,6 +283,11 @@ test : function()
 
   console.log(tabtest)
 },
+
+
+
+
+
 
 alignHF : function(father, espaceTopV, espaceLeftV)
 {
