@@ -1,0 +1,574 @@
+<html>
+<head>
+</head>
+<body>
+  <!-- docco sudo docco -o /Users/Eric/Desktop/Creaktive AlgoCreaktive/api.js -->
+  <div id="container"> </div>
+  <script src="jquery-2.1.1.js"></script>
+  <style> .el{
+    position: absolute;
+  }
+  </style>
+  <script>
+  var elements = [];
+  elements.push({id : "A",id_father : "" , top: 250, left: 700})
+  elements.push({id : "B",id_father : "A", top: 150, left: 300})
+  elements.push({id : "C",id_father : "A", top: 90, left: 120})
+  elements.push({id : "D",id_father : "A", top: 500, left: 80})
+  elements.push({id : "E",id_father : "B", top: 400, left: 50})
+  elements.push({id : "F",id_father : "B", top: 200, left: 90})
+  elements.push({id : "G",id_father : "C", top: 300, left: 120})
+  elements.push({id : "Z",id_father : "D", top: 300, left: 120})
+  elements.push({id : "H",id_father : "E", top: 200, left: 90})
+  elements.push({id : "J",id_father : "E", top: 150, left: 145})
+  elements.push({id : "K",id_father : "E", top: 120, left: 125})
+  elements.push({id : "I",id_father : "G", top: 70, left: 105})
+
+
+  var lib ={
+
+    AddBoard : function ( tableau, tableauAjouter)  // Cette Fonction nous permet d'ajouter les elements d'un
+  {                                                 // dans un autre. Cela permet d'éviter d'avoir un tableau
+  for ( i in tableauAjouter)                      // dans un autre on recupere un tableau contenant tous
+  {                                               // les elements d'autres tableau.
+  tableau.push(tableauAjouter[i])
+}
+},
+
+
+animate : function(tableau, color)                  // Elle nous permet d'animer des elements
+{
+  for ( var a = 0 ; a < tableau.length; a++ )
+  {                                            // Elle recupere un tableau et modifie le
+    tableau[a].forEach(function(el)                      // Top et le Left de l'element tous en l'animant
+  {
+    $('#'+el.id+'').animate({
+      top : ''+el.top+'px', left : ''+el.left+'px'
+    },'slow');
+
+    $('#'+el.id+'').css({
+      background : ''+color+''
+    });
+  });
+}
+},
+
+render : function(tableau, color)                   // Cette fonction nous permet de dessiner un tableau
+// Elle crée un DIV par elements du tableau
+{                                                   // avec un width et height aléatoire.
+  tableau.forEach(function(el)
+{
+
+  var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width: "+Math.floor((Math.random() * 50) + 10)+"; height: "+Math.floor((Math.random() * 50) + 10)+";background:"+color+"'><spam>"+el.id+"</div>";
+  //+Math.floor((Math.random() * 50) + 10)+
+  $('#container').append(html)
+});
+}
+,
+
+GetFather : function(father)                        // Cette fonction permet de récuperer
+{                                                   // l'element dit "Père" juste en donnant
+for ( i in elements)                               // son Id.
+{
+  if ( elements[i].id == father ){
+    return elements[i];
+  }
+}
+},
+
+GetLastChild : function()                         // Cette fonction nous donne le dernier
+{                                                 // "Enfant" de notre tableau TabChild
+return TabChild[(TabChild.length - 1)];          // qui correspond à notre tableau d'enfant
+},
+
+GetChilds : function(father)                    // Cette fonction nous crée un tableau
+{                                               // "d'Enfant" selon un "Père"
+TabChild = [];                                  // Elle parcours le tableau en comparant
+for ( i in elements)                           // Id_Father avec le Father donné à la fonction
+{                                              // Puis elle return le tableau
+  if ( elements[i].id_father == father ){
+    TabChild.push(elements[i])
+  }
+}
+
+return TabChild;
+
+}
+,GetFeuilles : function(tableau, feuilles)                   // Cette fonction genere nos "Feuilles"
+{                                                            // Une feuilles correspond à un element
+  var TabChildsIntermediaire =[];                           // qui n'est "Père" de personne, qui ne
+  var TabChilds = tableau;                                  // possede donc pas "d'Enfant".
+  for ( f in TabChilds)
+  {                                                         // Elle vas crée un Tableau "d'Enfant"
+  var TabChildFeuille = lib.GetChilds(TabChilds[f].id)    // pour un element, si un element
+  if ( TabChildFeuille.length < 1)                        // n'as pas d'enfant, il est envoyé
+  {                                                       // dans notre tableau de Feuilles
+    feuilles.push(TabChilds[f])                           // si il as des enfants, on ajoute
+  }else                                                   // tous ses "Enfant" dans un tableau
+  {                                                        // de sauvegarde pour ne pas perdre
+    lib.AddBoard(TabChildsIntermediaire, TabChildFeuille); // ses "Enfant" et le réutiliser plus tard.
+  }                                                        // Elle retourne notre tableau "d'Enfant"
+}                                                          // à réutiliser.
+return TabChildsIntermediaire;
+},
+
+GetAllFeuilles : function(father)                           // Cette fonction vas réutiliser en boucle
+{                                                           // la fonction GetFeuilles.
+  var TabFeuilles =[];                                      // Cela nous permet de faire un tableau des
+  var TabDChilds = lib.GetChilds(father);                   // de TOUS les elements et donc de savoir
+  // qui est la feuille, qui se situe à la
+  for ( var f = 0; TabDChilds.length > 0; f++)             // fin de la branche.
+  {                                                         // Elle retourne notre tableau contenant
+    TabDChilds = lib.GetFeuilles(TabDChilds, TabFeuilles)   // toutes les feuilles.
+  }
+
+  return TabFeuilles;
+},
+
+GetNbColonne : function()                                   //Cette fonction permet de savoir combien
+{                                                           // de feuilles possede un element
+  var TabColonne =[];                                       // cela nous permet de savoir sur combien
+  for ( var i = 0; i < elements.length; i++)                // de colonne la branche de cette element
+  {                                                         // vas grandir. Une colonne = une feuille
+    lib.GetAllFeuilles(elements[i].id)                      // elle nous retourn un tableau contenant
+    if ( lib.GetAllFeuilles(elements[i].id).length < 1)     // l'Id de l'element et le nbrC ( nombre de colonne)
+    {
+      TabColonne.push({id : elements[i].id, nbrC : 1 })
+    }else{
+      TabColonne.push({id : elements[i].id, nbrC : lib.GetAllFeuilles(elements[i].id).length })
+    }
+  }
+  return TabColonne;
+},
+
+GetMatrice : function(tableauColonne, father)           // Cette fonction est la base pour l'organisation de l'abre
+{                                                       // Elle permet de créer un échiquier de case vide et
+  TbC = tableauColonne;                                 // vas placer au bonne endroit l'element que l'on souhaite
+  var matrice = [];                                     // dans une des cases.
+  var TabDChilds = lib.GetChilds(father);
+  var Elzero = 0;                                       // Elle se sert du tableau des colonnes pour connaitre la
+  var Elinter = 0;                                      // taille de l'échiquier.
+  var El = 0;                                           // Ensuite elle place l'element au bonne endroit en regardant
+  var a = 0;                                            // Combien de colonne il vas falloir pour que la branche
+  // se devellope.
+  if (TabDChilds.length == 0 )                          // si on prend pas exemple un echiquier de longueur 7
+  {
+    lib.GetFather(father).vide = false;
+    matrice.push({ id : 0 ,top : 10, left : 10, width : 50, height : 50, vide : true, id_father: father})                                                 // et que l'on as un element B avec un nbrC ( Nombre de colonne)
+  }else{                                                      //  de 5, alors il va considerer que B prendra la place de 5
+    // colonne sur les 7 disponible                                                     // Ensuite il placeras B au milieu des "5 colonnes"
+    for ( p in TbC )                                   // C'est à dire on cosidere qui vas occuper les colonnes
+    {                                                   // ([0],[1],[2],[3],[4],)
+      if ( TbC[p].id == father){                        // On divise le nombre de colonne de B donc 5 / 2 = 2,5
+        for ( i = 0; i < TbC[p].nbrC  ; i++)            // Puis le Math.floor() permet d'arrondir au chiffre inferieur
+        {                                                // Du coup on place l'element B dans la case [2].
+        matrice.push({ id : i ,top : 10, left : 10, width : 50, height : 50, vide : true, id_father: father})
+      }
+    }                                                 // On fait cela en boucle en ajoutant a chaque fois les cases
+  }                                                   // déjà occupé, par exemple si C prend 1 case, il ne seras
+  for ( var c = 0; c < TbC.length ; c++)              // pas à la case [0] mais à la case [5] car B occupe les autres.
+  {
+    if( TabDChilds[0].id == TbC[c].id)
+    {
+      Elzero = TbC[c].nbrC / 2
+      Elzero = Math.floor(Elzero);
+      matrice[Elzero] = TabDChilds[0]
+      Elinter = TbC[c].nbrC - 1
+      matrice[Elzero].vide = false;
+
+    }
+  }
+  for ( j = 1; j < TabDChilds.length ; j++)
+  {
+    for ( var c = 0; c < TbC.length ; c++)
+    {
+      if( TabDChilds[j].id == TbC[c].id)
+      {
+        El =  TbC[c].nbrC / 2
+        test =  Elinter + Math.ceil(El)
+        Elinter = test + Math.floor(TbC[c].nbrC / 2)
+        matrice[test] = TabDChilds[j]
+
+        matrice[test].vide = false;
+      }
+    }
+  }
+}
+
+return matrice;
+},
+
+GetDeltaXH : function(tableau,espaceLeftH)
+{
+  var espace =0 ;
+  var nbrchild = tableau[0].length;
+  for ( var a = 0; a < tableau[0].length; a++)
+  {
+    if( tableau[0][a].vide == true )
+    {
+      espace = espace +  tableau[0][a].width;
+    }
+    else
+    {
+      espace = espace +  $("#"+tableau[0][a].id+"").width();
+    }
+  }
+
+  DeltaXH = ((( nbrchild - 1) * espaceLeftH )+ espace )/2  ;
+
+  return DeltaXH;
+
+
+},
+
+alignH : function(father, espaceLeftH, espaceTopH )
+{
+  //   var TabChild = lib.GetChilds(father);
+  var TabChild = lib.GetMatrice(lib.GetNbColonne(), father);
+
+
+
+  // var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
+  // var DeltaXH = lib.GetDeltaXH(espaceLeftH, lib.GetNbColonne(), TabChild, father);
+  //
+  //
+  //
+  // var TabChildPosition = lib.ChangePositionH(TabChild, father, espaceTopH, espaceLeftH);
+
+  return TabChild;
+},
+MajEspaceLeft : function (tableau,TcolonneH,Tlvl, espaceleftH)
+{
+  var espaceL = 0;
+  var espaceLeftF = 0;
+  var Gros = 0;
+  for ( var i = 0; i < TcolonneH.length; i++)
+  {
+    for ( var a = 0; a < Tlvl.length; a++)
+    {
+
+      if ( tableau.id == TcolonneH[i][a].id)
+      {
+
+        for ( var u = 0; u < TcolonneH[0].length; u++)
+        {
+          if ( TcolonneH[i][u].vide == true)
+          {
+            if ( TcolonneH[i][u].width > Gros)
+            {
+              Gros = TcolonneH[i][u].width
+            }
+
+          }else{
+            if ( $("#"+TcolonneH[i][u].id+"").width() > Gros)
+            {
+              Gros = $("#"+TcolonneH[i][u].id+"").width()
+            }
+          }
+        }
+      }
+    }
+  }
+  espaceL = Gros - $("#"+tableau.id+"").width()
+console.log(Gros)
+console.log(tableau.id)
+  if ( espaceL <= 0)
+  {
+    espaceLeftFinal = espaceleftH
+  }else{
+
+    espaceLeftFinal = espaceleftH + espaceL
+  }
+return espaceLeftFinal
+  },
+
+  GetPosition : function(tableau, DeltaX, TcolonneH,Tlvl, espaceLeftH, espaceTopH)
+{
+  var espaceLeftHF =0 ;
+  tableau[0][0].left = elements[0].left + ($("#"+elements[0].id+"").width() /2) - DeltaX
+  tableau[0][0].top = elements[0].top + $("#"+elements[0].id+"").height() + espaceTopH
+
+  for ( var i = 0; i < tableau.length; i++)
+  {
+    for ( var a = 0; a < tableau[0].length; a++)
+    {
+      if ( a == 0)
+      {
+        tableau[i][a].left = tableau[0][0].left
+      }
+      if ( i == 0 & a !=0)
+      {
+        if ( tableau[i][a].vide == true)
+        {
+          if ( tableau[i][a-1].vide == true){
+
+            tableau[i][a].left = tableau[i][a-1].left +  tableau[i][a-1].width + espaceLeftH;
+          }else {
+
+            tableau[i][a].left = tableau[i][a-1].left +  $("#"+tableau[i][a-1].id+"").width() + espaceLeftHF;
+
+          }
+        }else{
+          espaceLeftHF = lib.MajEspaceLeft( tableau[i][a-1], TcolonneH, Tlvl, espaceLeftH)
+
+          if ( tableau[i][a-1].vide == true){
+
+            tableau[i][a].left = tableau[i][a-1].left +  tableau[i][a-1].width + espaceLeftHF;
+
+          }else {
+
+            tableau[i][a].left = tableau[i][a-1].left +  $("#"+tableau[i][a-1].id+"").width() + espaceLeftHF;
+
+          }
+        }
+      }if ( i > 0 & a != 0)
+    {
+
+      tableau[i][a].left = TcolonneH[a][0].left
+    }
+
+      if ( tableau[i][0].level == 1)
+      {
+        tableau[i][a].top = tableau[0][0].top
+      }else{
+        tableau[i][a].top = tableau[0][0].top
+        for ( var t = 1; t <= tableau[i][0].level - 1; t++ )
+        {
+
+          tableau[i][a].top = tableau[i][a].top + tableau[i-t][0].height + espaceTopH
+
+        }
+
+      }
+    }
+  }
+  return tableau;
+
+
+},
+GetLevel : function(T)
+{
+  T[0].forEach(function(el){
+    el.level = 1
+  });
+  for ( i = 1; i < T.length ; i++)
+  {
+    for ( t = 0; t < T[i].length; t++)
+    {
+      father = T[i][t].id_father
+      if ( father == null )
+      {
+      }else{
+
+        T[i].forEach(function(el){
+          el.level = lib.GetFather(father).level + 1
+        });
+      }
+    }
+  }
+  return T
+},
+alignAllH : function(espaceLeftH, espaceTopH )
+{
+  var T = []
+  for ( i in elements)
+  {
+    T.push(lib.alignH(elements[i].id,espaceLeftH, espaceTopH ))
+  }
+  return T
+},
+alignHF : function(espaceLeftH, espaceTopH)
+{
+  var Tlvl = [];
+  var level1 = [];
+  var level2 = [];
+  var level3 = [];
+  var Tcolonne = [];
+  T = lib.alignAllH(espaceLeftH, espaceTopH)
+
+  Tlevel = lib.GetLevel(T)
+  lib.AddBoard(level1, Tlevel[0])
+
+  for ( var i = 1; i < Tlevel.length ; i++)
+  {
+
+    if ( Tlevel[i][0].level == 2)
+    {
+      lib.AddBoard(level2, Tlevel[i])
+    }
+    if ( Tlevel[i][0].level == 3)
+    {
+      lib.AddBoard(level3, Tlevel[i])
+    }
+
+  }
+
+  Tlvl[0]=[];
+  lib.AddBoard(Tlvl[0],level1)
+  Tlvl[1]=[];
+  lib.AddBoard(Tlvl[1],level2)
+
+  Tlvl[2]=[];
+  lib.AddBoard(Tlvl[2],level3)
+
+
+
+  for ( var a = 0; a < level1.length; a++)
+  {
+    Tcolonne[a]= []
+    Tcolonne[a].push(level1[a])
+    Tcolonne[a].push(level2[a])
+    Tcolonne[a].push(level3[a])
+
+  }
+  TcolonneH = lib.GetgrosSacColonne(Tcolonne)
+  TlvlW = lib.GetgrosSacLigne(Tlvl)
+
+  Taille = lib.GetTaille(TlvlW, TcolonneH)
+
+  var DeltaX = lib.GetDeltaXH(Taille, espaceLeftH)
+
+  var final = lib.GetPosition(Taille, DeltaX, TcolonneH,Tlvl ,espaceLeftH, espaceTopH)
+  lib.animate(final, "green")
+  return final
+},
+GetTaille : function ( TlvlW, TcolonneH)
+{
+  for ( var i = 0; i < TlvlW.length; i++)
+  {
+    for ( var z = 0; z < TcolonneH.length; z++)
+    {
+      if ( TlvlW[i][z].vide == true)
+      {
+        TlvlW[i][z].width = TcolonneH[z][i].width
+
+      }
+
+    }
+  }
+  return TlvlW
+},
+GetgrosSacLigne : function (Tlvl)
+{
+  var Gros = 0;
+  for ( var i = 0; i < Tlvl.length; i++)
+  {
+    for ( var u = 0; u < Tlvl[0].length; u++)
+    {
+      if ( Tlvl[i][u].vide == false)
+      {
+        if ( $("#"+Tlvl[i][u].id+"").height() > Gros)
+        {
+          Gros = $("#"+Tlvl[i][u].id+"").height()
+        }
+      }
+
+    }
+    for ( var e = 0; e < Tlvl[0].length; e++)
+    {
+      if ( Tlvl[i][e].vide == true)
+      {
+        Tlvl[i][e].height = Gros
+      }
+    }
+    Gros = 0;
+  }
+  return Tlvl;
+},
+GetgrosSacColonne : function (Tcolonne)
+{
+  var Gros = 0;
+  for ( var i = 0; i < Tcolonne.length; i++)
+  {
+    for ( var u = 0; u < Tcolonne[0].length; u++)
+    {
+      if ( Tcolonne[i][u].vide == false)
+      {
+        if ( $("#"+Tcolonne[i][u].id+"").width() > Gros)
+        {
+          Gros = $("#"+Tcolonne[i][u].id+"").width()
+        }
+      }
+
+    }
+    for ( var e = 0; e < Tcolonne[0].length; e++)
+    {
+      if ( Tcolonne[i][e].vide == true)
+      {
+        Tcolonne[i][e].width = Gros
+      }
+    }
+    Gros = 0;
+  }
+  return Tcolonne;
+
+},
+GetDeltaYV : function(espaceLeftH, tableauColonne, TabChild, father)
+{
+  var TbC = tableauColonne
+  var espace=0;
+  var nbrchild = 0;
+  for ( p in TbC )
+  {
+    if ( TbC[p].id == father){
+
+      nbrchild = TbC[p].nbrC
+    }
+  }
+  if ( TabChild.length > 0 )
+  {
+    for ( a = 1; a < TabChild.length -1; a++ )
+    {
+      espace = espace +  $("#"+TabChild[a].id+"").height();
+    }
+  }
+  DeltaYV = (( nbrchild - 1) * espaceTopV + espace ) /2 ;
+  return DeltaYV;
+},
+GetDeltaXV : function(father, espaceLeftV)
+{
+  var plusGrosseBulle = 0;
+  for ( z in TabChild)
+  {
+    if ($("#"+TabChild[z].id+"").width() > plusGrosseBulle )
+    {
+      plusGrosseBulle = $("#"+TabChild[z].id+"").width();
+    }
+  }
+  DeltaXV = ( ( $("#"+this.GetFather(father).id+"").width() + plusGrosseBulle ) / 2 + espaceLeftV );
+  return DeltaXV;
+},
+ChangePositionV : function(father, espaceTopV, espaceLeftV)
+{
+  for ( j in TabChild )
+  {
+    TabChild[0].top = this.GetFather(father).top + ( $("#"+this.GetFather(father).id+"").height() /2) - DeltaYV
+    if ( j >= 1)
+    {
+      TabChild[j].top = TabChild[(j-1)].top + $("#"+TabChild[(j-1)].id+"").height() + espaceTopV;
+    }
+    TabChild[j].left = this.GetFather(father).left + DeltaXV
+  }
+  return TabChild;
+},
+alignV : function(father, espaceTopV, espaceLeftV)
+{
+  var TabChild = lib.GetMatrice(lib.GetNbColonne(), father);
+
+  var DeltaYV = lib.GetDeltaXH(espaceTopV, lib.GetNbColonne(), TabChild, father);
+  var DeltaXV = lib.GetDeltaXV(father, espaceLeftV);
+
+  var TabChildPosition = lib.ChangePositionV(father, espaceTopV, espaceLeftV);
+  return TabChildPosition;
+}
+}
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
