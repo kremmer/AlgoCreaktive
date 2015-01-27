@@ -2,289 +2,34 @@
 <head>
 </head>
 <body>
-
+  <!-- docco sudo docco -o /Users/Eric/Desktop/Creaktive AlgoCreaktive/api.js -->
   <div id="container"> </div>
   <script src="jquery-2.1.1.js"></script>
+  <script src="lib.js"></script>
   <style> .el{
     position: absolute;
   }
   </style>
   <script>
-  var elements = [];
-  elements.push({id : "A",id_father : "" , top: 250, left: 400})
-  elements.push({id : "B",id_father : "A", top: 150, left: 300})
-  elements.push({id : "C",id_father : "A", top: 90, left: 120})
-  elements.push({id : "D",id_father : "A", top: 500, left: 80})
-  elements.push({id : "E",id_father : "B", top: 400, left: 50})
-  elements.push({id : "F",id_father : "B", top: 200, left: 90})
-  elements.push({id : "G",id_father : "B", top: 300, left: 120})
-  elements.push({id : "H",id_father : "E", top: 200, left: 90})
-  elements.push({id : "J",id_father : "E", top: 150, left: 145})
-  elements.push({id : "K",id_father : "E", top: 120, left: 125})
-  elements.push({id : "I",id_father : "G", top: 70, left: 105})
-
-
-  var lib ={
-
-    AddBoard : function ( tableau, tableauAjouter)
-  {
-    for ( i in tableauAjouter)
-    {
-      tableau.push(tableauAjouter[i])
-    }
-  },
-
-
-animate : function(tableau, color)
-
-{
-  tableau.forEach(function(el)
-{
-  $('#'+el.id+'').animate({
-    top : ''+el.top+'px', left : ''+el.left+'px'
-  },'slow');
-
-  $('#'+el.id+'').css({
-    background : ''+color+''
-  });
-});
-},
-
-render : function(tableau, color)
-
-{
-  elements.forEach(function(el)
-{
-
-  var html = "<div id='"+el.id+"' class='el' style='top:"+el.top+"px;left:"+el.left+"px;width:"+Math.floor((Math.random() * 50) + 10)+"; height:"+Math.floor((Math.random() * 50) + 10)+";background:"+color+"'><spam>"+el.id+"</div>";
-
-  $('#container').append(html)
-});
-}
-,
-
-
-
-
-GetFather : function(father)
-{
-  for ( i in elements)
-  {
-    if ( elements[i].id == father ){
-      return elements[i];
-    }
-  }
-},
-
-GetLastChild : function()
-{
-  return TabChild[(TabChild.length - 1)];
-},
-GetChilds : function(father)
-{
-  TabChild = [];
-  for ( i in elements)
-  {
-    if ( elements[i].id_father == father ){
-      TabChild.push(elements[i])
-    }
-  }
-  return TabChild;
-}
-,GetChildFeuille : function(tableau, j)
-{
-  TabChild = [];
-  for ( i in elements)
-  {
-    if ( elements[i].id_father == tableau[j].id ){
-
-      TabChild.push(elements[i])
-    }
-  }
-  return TabChild;
-}
-,
-GetDeltaXH : function(espaceLeftH)
-{
-  var espace=0;
-  nbrchild = TabChild.length;
-  if ( TabChild.length > 0 )
-  {
-    for ( var a = 0; a < TabChild.length  ; a++ )
-    {
-      espace = espace +  $("#"+TabChild[a].id+"").width();
-    }
-  }
-  DeltaXH = ((( nbrchild - 1) * espaceLeftH )+ espace ) /2 ;
-  return DeltaXH;
-},
-GetDeltaYH : function(father, espaceTopH)
-{
-  var plusGrosseBulle = 0;
-  for ( z in TabChild)
-  {
-    if ($("#"+TabChild[z].id+"").height() > plusGrosseBulle )
-    {
-      plusGrosseBulle = $("#"+TabChild[z].id+"").height();
-    }
-  }
-  DeltaYH = ( ( $("#"+this.GetFather(father).id+"").height() + plusGrosseBulle ) / 2 + espaceTopH );
-  return DeltaYH;
-},
-ChangePositionH : function(father, espaceTopH, espaceLeftH)
-{
-  for ( j in TabChild )
-  {
-    TabChild[0].left = this.GetFather(father).left + ( $("#"+this.GetFather(father).id+"").width() /2) - DeltaXH
-    if ( j >= 1)
-    {
-      TabChild[j].left = TabChild[(j-1)].left +  $("#"+TabChild[(j-1)].id+"").width() + espaceLeftH;
-    }
-    TabChild[j].top = this.GetFather(father).top + DeltaYH
-  }
-  return TabChild;
-},
-
-alignH : function(father, espaceLeftH, espaceTopH )
-{
-  var TabChild = lib.GetChilds(father);
-
-
-
-  var DeltaYH = lib.GetDeltaYH(father, espaceTopH)
-  var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-
-
-  var DeltaYH = 0;
-  var DeltaXH = lib.GetDeltaXH(espaceLeftH);
-
-
-
-
-  var TabChildPosition = lib.ChangePositionH(father, espaceTopH, espaceLeftH);
-  return TabChildPosition;
-},
-GetDeltaYV : function(espaceTopV)
-{
-  var espace=0;
-  if ( TabChild.length > 0 )
-  {
-    espace = ( $("#"+TabChild[0].id+"").height() + $("#"+this.GetLastChild().id+"").height()) / 2;
-    for ( a = 1; a < TabChild.length -1; a++ )
-    {
-      espace = espace +  $("#"+TabChild[a].id+"").height();
-    }
-  }
-  DeltaYV = (( TabChild.length - 1) * espaceTopV + espace ) /2 ;
-  return DeltaYV;
-},
-GetDeltaXV : function(father, espaceLeftV)
-{
-  var plusGrosseBulle = 0;
-  for ( z in TabChild)
-  {
-    if ($("#"+TabChild[z].id+"").width() > plusGrosseBulle )
-    {
-      plusGrosseBulle = $("#"+TabChild[z].id+"").width();
-    }
-  }
-  DeltaXV = ( ( $("#"+this.GetFather(father).id+"").width() + plusGrosseBulle ) / 2 + espaceLeftV );
-  return DeltaXV;
-},
-ChangePositionV : function(father, espaceTopV, espaceLeftV)
-{
-  for ( j in TabChild )
-  {
-    TabChild[0].top = this.GetFather(father).top + ( $("#"+this.GetFather(father).id+"").height() /2) - DeltaYV
-    if ( j >= 1)
-    {
-      TabChild[j].top = TabChild[(j-1)].top + $("#"+TabChild[(j-1)].id+"").height() + espaceTopV;
-    }
-    TabChild[j].left = this.GetFather(father).left + DeltaXV
-  }
-  return TabChild;
-},
-alignV : function(father, espaceTopV, espaceLeftV)
-{
-  var TabChild = lib.GetChilds(father);
-  var DeltaYV = lib.GetDeltaYV(espaceTopV);
-  var DeltaXV = lib.GetDeltaXV(father, espaceLeftV);
-  var TabChildPosition = lib.ChangePositionV(father, espaceTopV, espaceLeftV);
-  return TabChildPosition;
-},
-GetNbColonne : function()
-{
-var TabColonne =[];
-  for ( var i = 0; i < elements.length; i++)
-  {
-    lib.GetAllFeuilles(elements[i].id)
-
-    if ( lib.GetAllFeuilles(elements[i].id).length < 1)
-    {
-      TabColonne.push({id : elements[i].id, nbrC : 1 })
-    }else{
-TabColonne.push({id : elements[i].id, nbrC : lib.GetAllFeuilles(elements[i].id).length })
-}
-  }
-return TabColonne;
-
-},
-GetFeuilles : function(tableau, feuilles)
-{
-  var TabChildsIntermediaire =[];
-  var TabChilds = tableau;
-  for ( f in TabChilds)
-  {
-    var TabChildFeuille = lib.GetChilds(TabChilds[f].id)
-    if ( TabChildFeuille.length < 1)
-    {
-      feuilles.push(TabChilds[f])
-    }else
-    {
-      lib.AddBoard(TabChildsIntermediaire, TabChildFeuille);
-    }
-  }
-  return TabChildsIntermediaire;
-},
-
-GetAllFeuilles : function(father)
-{
-  var TabFeuilles =[];
-  var TabDChilds = lib.GetChilds(father);
-   for ( var f = 0; TabDChilds.length > 0; f++)
-   {
-    TabDChilds = lib.GetFeuilles(TabDChilds, TabFeuilles)
-  }
-
-return TabFeuilles;
-},
-
-test : function()
-{
-  var tabtest = TabChild;
-  // var test = lib.GetChildFeuille(elements, 0);
-  //
-  // if ( test.length < 1)
-  // {
-  //   tabtest.push(elements[0])
-  // }
-
-  console.log(tabtest)
-},
-
-alignHF : function(father, espaceTopV, espaceLeftV)
-{
-
-
-
-},
-
-}
-
-
-
-
+  var elemen = [];
+  elemen.push({id : "A",id_father : "" , top: 50, left: 600})
+  elemen.push({id : "B",id_father : "A", top: 150, left: 300})
+  elemen.push({id : "C",id_father : "B", top: 90, left: 120})
+  elemen.push({id : "D",id_father : "C", top: 500, left: 80})
+  elemen.push({id : "E",id_father : "D", top: 400, left: 50})
+  elemen.push({id : "F",id_father : "A", top: 200, left: 90})
+  elemen.push({id : "G",id_father : "F", top: 300, left: 120})
+  elemen.push({id : "Z",id_father : "D", top: 300, left: 120})
+  elemen.push({id : "H",id_father : "E", top: 200, left: 90})
+  elemen.push({id : "J",id_father : "E", top: 150, left: 145})
+  elemen.push({id : "K",id_father : "E", top: 120, left: 125})
+  elemen.push({id : "I",id_father : "G", top: 70, left: 105})
+  elemen.push({id : "T",id_father : "I", top: 70, left: 105})
+  elemen.push({id : "V",id_father : "T", top: 70, left: 105})
+  elemen.push({id : "p",id_father : "V", top: 70, left: 105})
 
 </script>
+
+
 </body>
 </html>
